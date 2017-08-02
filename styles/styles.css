@@ -1,0 +1,53 @@
+* {
+	font-family: helvetica;
+}
+
+#map {
+	height: 100%;
+	z-index: 0;
+}
+
+.container {
+	height: 100vh;
+}
+
+.sidebar {
+	z-index: 1;
+	width: 25%;
+	height: 100%;
+	position: absolute;
+	transition: transform 0.4s ease;
+	display: flex;
+	justify-content: center;
+}
+
+.closed {
+	transform: translate(-100%, 0);
+}
+
+.open {
+	transform: translate(0, 0);
+}
+
+.fa-rotate-180 {
+	transform: rotate(180deg);
+}
+
+#sidebar-content {
+	background-color: rgba(173, 216, 230, 0.5);
+	height: 100%;
+	width: 100%;
+	color: #0000ff;
+}
+
+#sidebar-button {
+	color: #ff4b00;
+	position: fixed;
+	left: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	border: none;
+	background: none;
+	padding: 0;
+	margin: 0;
+}
