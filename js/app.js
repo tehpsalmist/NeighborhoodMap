@@ -20,7 +20,9 @@ function ViewModel() {
 		return self.radiusResult(Math.trunc(radius() * 1000 / 1609) / 1000);
 	}, this);
 
-	//	-create location from marker
+	this.newSpot = ko.computed(function() {
+		return newMarker();
+	})
 
 	//	-search for spots within distance of location
 	//	-get directions to spot

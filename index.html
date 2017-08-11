@@ -14,6 +14,18 @@
 					<h1>
 						Find a Place to Skate!
 					</h1>
+					<button class="search-button">
+						Browse from your location
+					</button>
+					<button class="search-button">
+						Draw a search area
+					</button>
+					<button class="search-button">
+						Search by Name/Details
+					</button>
+					<button class="search-button">
+						Search within distance
+					</button>
 					<p data-bind="visible: radiusResult">
 						You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
 					</p>
@@ -26,7 +38,11 @@
 				</div>
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
 			</div>
+
+			<div class="fa fa-chevron-down fa-3x drawing-pointer"></div>
+
 			<div id="map"></div>
+
 		</div>
 
 		<!--
@@ -56,7 +72,7 @@
 		-create location from marker
 
 		-Pull in Instagram Info
-		
+
 		-create login for users to access/edit firebase
 		-obtain user's instagram login and location services permission
 

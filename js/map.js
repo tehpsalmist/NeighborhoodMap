@@ -227,8 +227,7 @@ function populateInfoWindow(marker, infowindow) {
           pov: {
             heading: heading,
             pitch: 0
-          },
-          enableCloseButton: true
+          }
         };
       var panorama = new google.maps.StreetViewPanorama(
         document.getElementById('pano'), panoramaOptions);
