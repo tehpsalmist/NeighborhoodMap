@@ -12,7 +12,7 @@ function ViewModel() {
 			self.visibleSidebar(false);
 			self.chevronRight(true);
 		}
-	}
+	};
 
 	// Radius information and display controls
 	this.radiusResult = ko.observable(0);
