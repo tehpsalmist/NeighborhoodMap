@@ -72,3 +72,8 @@ body {
 	bottom: 5px;
 	right: 10px;
 }
+
+.credit-button:hover {
+	color: lightblue;
+	cursor: pointer;
+}

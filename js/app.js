@@ -38,4 +38,6 @@ function ViewModel() {
 	//	-scroll credits
 }
 
-ko.applyBindings(new ViewModel());
+var duhVyooMahdul = new ViewModel();
+
+ko.applyBindings(duhVyooMahdul);
