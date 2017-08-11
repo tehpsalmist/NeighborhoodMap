@@ -12,40 +12,65 @@
 			<div id="sidebar" class="closed sidebar" data-bind="css: {open: visibleSidebar}">
 				<div id="sidebar-content">
 					<h1>
-						Search for the Ideal Skate Spot
+						Find a Place to Skate!
 					</h1>
-					<p>
-						Find your spot on the map
+					<p data-bind="visible: radiusResult">
+						You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
 					</p>
 					<h2>
-						I don't know, something interesting...
+						Search Results:
 					</h2>
+					<p class="credit-button"> <!-- data-bind="click: openCredits" -->
+						Credits
+					</p>
 				</div>
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
 			</div>
 			<div id="map"></div>
 		</div>
+
+		<!--
+
+		Credits
+
+		
+
+		Marker Icons:
+		Stairs by Maxim Samos from the Noun Project
+		half-pipe by Artem Kovyazin from the Noun Project
+
+		-->
+
+		<!--
+		
+		To do:
+
+		-search for spots within distance of location
+		-get directions to spot
+
+		-center map on location
+
+		-info windows populated with what? Name, streetview, instagram post, type?
+		-connect firebase to location information
+
+		-create location from marker
+
+		-Pull in Instagram Info
+		-create login for users to access/edit firebase
+		-obtain user's instagram login and location services permission
+
+		-style stuff
+		-scroll credits
+
+		-->
+
+	  <script src='js/knockout-3.4.2.js'></script>
 		
 		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 
-		<script>
-		  // Initialize Firebase
-		  var config = {
-		    apiKey: "AIzaSyAvirBHOZJADuil02yaaZseFILM7esEOqc",
-		    authDomain: "neighborhood-map-174401.firebaseapp.com",
-		    databaseURL: "https://neighborhood-map-174401.firebaseio.com",
-		    projectId: "neighborhood-map-174401",
-		    storageBucket: "neighborhood-map-174401.appspot.com",
-		    messagingSenderId: "793662469029"
-		  };
-		  firebase.initializeApp(config);
-		</script>
-
 		<script async defer src="js/map.js"></script>
 		
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,drawing&v=3&callback=initMap"></script>
-
-	  <script src='js/knockout-3.4.2.js'></script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=initMap"></script>
 
 	  <script async defer src="js/database.js"></script>
 

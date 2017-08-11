@@ -2,6 +2,10 @@
 	font-family: helvetica;
 }
 
+body {
+	margin: 0;
+}
+
 #map {
 	height: 100%;
 	z-index: 0;
@@ -50,4 +54,21 @@
 	background: none;
 	padding: 0;
 	margin: 0;
+}
+
+#sidebar-button:focus {
+	outline: none;
+}
+
+#sidebar-button:hover {
+	cursor: pointer;
+}
+
+.credit-button {
+	padding: 0;
+	margin: 0;
+	color: white;
+	position: fixed;
+	bottom: 5px;
+	right: 10px;
 }
