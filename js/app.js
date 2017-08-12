@@ -20,9 +20,38 @@ function ViewModel() {
 		return self.radiusResult(Math.trunc(radius() * 1000 / 1609) / 1000);
 	}, this);
 
+	// Display Clear Shape button and clearShape function
+	this.shapes = ko.observable(false);
+	this.clearShapes = function() {
+		if (shape) {
+			shape.setMap(null);
+		} else if (newMarker()) {
+			newMarker().setMap(null);
+			newMarker(null);
+		}
+		showMarkers(markers);
+	}
+
+	// Causing the pointer to highlight the drawing toolbar and disappear
+	this.drawingPointer = ko.observable(false);
+	this.fadePointer = ko.observable(false);
+	this.showDrawingPointer = function() {
+		self.drawingPointer(true);
+		setTimeout(function() {
+			self.fadePointer(true);
+		}, 3500)
+		setTimeout(function() {
+			self.drawingPointer(false);
+		}, 4400);
+		setTimeout(function() {
+			self.fadePointer(false);
+		}, 4600);
+	}
+
+	// Marking and saving a new skatespot
 	this.newSpot = ko.computed(function() {
 		return newMarker();
-	})
+	});
 
 	//	-search for spots within distance of location
 	//	-get directions to spot

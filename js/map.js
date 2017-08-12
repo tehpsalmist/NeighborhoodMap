@@ -135,7 +135,9 @@ function initMap() {
   }
 
   drawingManager.addListener('overlaycomplete', function(event) {
-    // First, check if there is an existing shape.
+    duhVyooMahdul.shapes(true);
+
+    // Check if there is an existing shape.
     // If there is, get rid of it and remove the markers
     if (shape) {
       shape.setMap(null);

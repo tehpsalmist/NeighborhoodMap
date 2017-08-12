@@ -17,8 +17,14 @@
 					<button class="search-button">
 						Browse from your location
 					</button>
-					<button class="search-button">
+					<button class="search-button" data-bind="click: showDrawingPointer">
 						Draw a search area
+					</button>
+					<p data-bind="visible: radiusResult">
+						You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
+					</p>
+					<button class="clear-button" data-bind="visible: shapes, click: clearShapes">
+						Clear Drawing
 					</button>
 					<button class="search-button">
 						Search by Name/Details
@@ -26,9 +32,7 @@
 					<button class="search-button">
 						Search within distance
 					</button>
-					<p data-bind="visible: radiusResult">
-						You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
-					</p>
+					
 					<h2>
 						Search Results:
 					</h2>
@@ -39,7 +43,7 @@
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
 			</div>
 
-			<div class="fa fa-chevron-down fa-3x drawing-pointer"></div>
+			<div class="fa fa-chevron-down fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer}"></div>
 
 			<div id="map"></div>
 
