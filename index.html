@@ -11,32 +11,52 @@
 		<div class="container">
 			<div id="sidebar" class="closed sidebar" data-bind="css: {open: visibleSidebar}">
 				<div id="sidebar-content">
-					<h1>
+					<h1 class="title">
 						Find a Place to Skate!
 					</h1>
-					<button class="search-button">
-						Browse from your location
+					<button class="button search-button" data-bind="click: browseClick">
+						Browse from a specific location
 					</button>
-					<button class="search-button" data-bind="click: showDrawingPointer">
+					<form id="browse-location" class="search-form" data-bind="visible: browse, submit: zoomToArea">
+						<input type="text" id="zoomSearch" placeholder="Where will your journey begin?" class="input" data-bind="textInput: address">
+						<p data-bind="visible: zoomSearchAlert, text: zoomSearchAlert"></p>
+						<p data-bind="visible: userLoc, text: userLoc"></p>
+						<div class="button-container">
+							<button class="button go-button" type="submit" data-bind="click: zoomToArea">
+								Go!
+							</button>
+							<button class="button go-button" data-bind="click: zoomToStart">
+								Reset Map
+							</button>
+							<button class="button go-button" data-bind="click: discoverUserLocation">
+								Use My Location
+							</button>
+						</div>
+					</form>
+					<button class="button search-button" data-bind="click: showDrawingPointer">
 						Draw a search area
 					</button>
-					<p data-bind="visible: radiusResult">
-						You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
-					</p>
-					<button class="clear-button" data-bind="visible: shapes, click: clearShapes">
-						Clear Drawing
-					</button>
-					<button class="search-button">
+					<form class="search-form" data-bind="visible: shapes">
+						<p data-bind="visible: radiusResult">
+							You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
+						</p>
+						<div class="button-container">
+							<button class="button go-button" data-bind="visible: shapes, click: clearShapes">
+								Clear <span data-bind="text: typeOfShape"></span>
+							</button>
+						</div>
+					</form>
+					<button class="button search-button" data-bind="click: showDetails">
 						Search by Name/Details
 					</button>
-					<button class="search-button">
+					<button class="button search-button" data-bind="click: showDistance">
 						Search within distance
 					</button>
 					
-					<h2>
+					<h2 data-bind="visible: searchResults">
 						Search Results:
 					</h2>
-					<p class="credit-button"> <!-- data-bind="click: openCredits" -->
+					<p class="credit-button" data-bind="click: creditClick"> <!-- data-bind="click: openCredits" -->
 						Credits
 					</p>
 				</div>
@@ -45,19 +65,53 @@
 
 			<div class="fa fa-chevron-down fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer}"></div>
 
+			<div class="credits" data-bind="visible: credits">
+				<h1 class="credit-title">
+					Credits
+				</h1>
+				<button class="back-to-map" data-bind="click: creditClick">
+					Back to the Map
+				</button>
+				<div class="feature">
+					<div class="feature-div">
+						<img class="feature-img" src="images/ko-logo.png">
+					</div>
+					<div class="feature-div">
+						<p class="feature-text">
+							Knockout is the backbone of this app's functionality, and their documentation is phenomenal.
+						</p>
+					</div>
+				</div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+				<div class="feature"></div>
+			</div>
+
 			<div id="map"></div>
 
 		</div>
 
 		<!--
 
-		Credits
-
-		
+		CREDITS		
 
 		Marker Icons:
-		Stairs by Maxim Samos from the Noun Project
-		half-pipe by Artem Kovyazin from the Noun Project
+			Stairs by Maxim Samos from the Noun Project
+			half-pipe by Artem Kovyazin from the Noun Project
+
+		Google Maps API
+		
+		KnockoutJS
+
+		Instagram API
+
+		https://gist.github.com/chadedrupt/5974524
+
+		Firebase
 
 		-->
 
@@ -68,14 +122,12 @@
 		-search for spots within distance of location
 		-get directions to spot
 
-		-center map on location
-
-		-info windows populated with what? Name, streetview, instagram post, type?
+		-info windows populated with what? instagram post, type?
 		-connect firebase to location information
 
 		-create location from marker
 
-		-Pull in Instagram Info
+		-Pull in Instagram Info (Karol's links in slack)
 
 		-create login for users to access/edit firebase
 		-obtain user's instagram login and location services permission

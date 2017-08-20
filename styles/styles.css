@@ -1,5 +1,6 @@
 * {
 	font-family: helvetica;
+	box-sizing: border-box;
 }
 
 body {
@@ -40,36 +41,58 @@ body {
 	color: #960000;
 }
 
-.search-button {
+.title {
+	text-shadow: 2px 2px 2px #444444;
+	width: auto;
+}
+
+.button {
 	display: block;
-	width: 100%;
 	text-align: center;
 	color: inherit;
 	background-color: rgba(173, 190, 230, 0.6);
-	font-size: 1em;
 	border: 0;
 	border-radius: 10px;
 	padding: 10px;
+}
+
+.input {
+	color: inherit;
+	padding: 5px;
+	width: 100%;
+	border: 0;
+	border-radius: 10px;
+	display: block;
+	margin: 10px 0;
+	font-size: 1em;
+}
+
+.search-form {
+	text-align: center;
+}
+
+.button-container {
+	margin: 0 auto;
+	display: inline-block;
+}
+
+.search-button {
+	width: 100%;
+	font-size: 1em;
+	font-weight: bold;
 	margin-top: 10px;
 }
 
-.search-button:hover,
-.clear-button:hover {
+.button:hover {
 	background-color: rgba(173, 190, 230, 0.8);
 	cursor: pointer;
 }
 
-.clear-button {
-	display: block;
+.go-button {
 	width: auto;
 	margin: 10px auto;
-	text-align: center;
-	color: inherit;
-	background-color: rgba(173, 190, 230, 0.6);
-	font-size: .9em;
-	border: 0;
-	border-radius: 10px;
-	padding: 5px;
+	font-size: 1em;
+	display: inline-block;
 }
 
 #sidebar-button {
@@ -106,6 +129,70 @@ body {
 	cursor: pointer;
 }
 
+.credits {
+	position: absolute;
+	height: 100%;
+	z-index: 2;
+	width: 100%;
+	margin: 0;
+	overflow-y: scroll;
+	background-color: #252525;
+	color: white;
+}
+
+.credit-title {
+	color: #960000;
+	text-shadow: 2px 2px 1px white;
+	text-align: center;
+}
+
+.back-to-map {
+	position: fixed;
+	top: 1em;
+	right: 25%;
+	font-size: 1rem;
+	text-shadow: 1px 1px .5px white;
+	box-shadow: 2px 2px 1px white;
+	border-radius: 10px;
+	padding: 5px;
+	color: #252525;
+	background-color: #960000;
+	border: 0;
+}
+
+.back-to-map:hover {
+	text-shadow: 1px 1px .5px #252525;
+	color: white;
+}
+
+.back-to-map:focus {
+	box-shadow: none;
+	border: solid 1px #dddddd;
+}
+
+.feature {
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.feature-div {
+	width: 30%;
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.feature-img {
+	width: 100%;
+}
+
+.feature-text {
+	text-align: center;
+	font-size: 1em;
+}
+
 .drawing-pointer {
 	color: #ff4b00;
 	position: fixed;
@@ -117,7 +204,7 @@ body {
 	padding: 0;
 	margin: 0;
 	z-index: 1;
-  animation: animation 5000ms linear both; /* Generated with Bounce.js. Edit at https://goo.gl/UBNr8v */
+  animation: bounceAnimation 5000ms linear both; /* Generated with Bounce.js. Edit at https://goo.gl/UBNr8v */
 }
 
 .fade-out {
@@ -131,7 +218,7 @@ body {
 
 /* Generated with Bounce.js. Edit at https://goo.gl/UBNr8v */
 
-@keyframes animation { 
+@keyframes bounceAnimation { 
   0% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -300, 0, 1); }
   0.5% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -286.243, 0, 1); }
   0.6% { transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, -282.956, 0, 1); }
