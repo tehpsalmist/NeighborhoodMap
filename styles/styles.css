@@ -38,27 +38,19 @@ a {
 	transform: translate(0, 0);
 }
 
-.testinner {
-	height: 200px;
-	width: 100%;
-	background-color: rgba(155, 204, 32, 0.3);
-}
-
-.testouter {
-	max-height: 100%;
-	overflow-y: scroll;
-}
-
 #sidebar-content {
 	background-color: rgba(173, 190, 230, 0.5);
 	height: 100%;
 	width: 100%;
 	color: #960000;
+	display: flex;
+	flex-direction: column;
 }
 
 .title {
 	text-shadow: 2px 2px 2px #444444;
-	width: auto;
+	width: 100%;
+	text-align: center;
 }
 
 .button {
@@ -108,6 +100,16 @@ a {
 	margin: 10px auto;
 	font-size: 1em;
 	display: inline-block;
+}
+
+.search-item {
+	height: 200px;
+	width: 100%;
+	background-color: rgba(155, 204, 32, 0.3);
+}
+
+.search-results {
+	overflow-y: scroll;
 }
 
 #sidebar-button {
