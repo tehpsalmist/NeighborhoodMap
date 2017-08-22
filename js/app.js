@@ -107,6 +107,7 @@ function ViewModel() {
 		}
 	}
 
+	// show the credits!
 	this.credits = ko.observable(false);
 	this.creditClick = function() {
 		if (self.credits() === false) {
