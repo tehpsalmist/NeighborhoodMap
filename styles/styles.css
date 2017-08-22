@@ -7,6 +7,10 @@ body {
 	margin: 0;
 }
 
+a {
+	color: #ff4b00;
+}
+
 #map {
 	height: 100%;
 	z-index: 0;
@@ -32,6 +36,17 @@ body {
 
 .open {
 	transform: translate(0, 0);
+}
+
+.testinner {
+	height: 200px;
+	width: 100%;
+	background-color: rgba(155, 204, 32, 0.3);
+}
+
+.testouter {
+	max-height: 100%;
+	overflow-y: scroll;
 }
 
 #sidebar-content {
@@ -136,7 +151,7 @@ body {
 	width: 100%;
 	margin: 0;
 	overflow-y: scroll;
-	background-color: #252525;
+	background-color: #555555;
 	color: white;
 }
 
@@ -148,7 +163,7 @@ body {
 
 .back-to-map {
 	position: fixed;
-	top: 1em;
+	top: 25px;
 	right: 25%;
 	font-size: 1rem;
 	text-shadow: 1px 1px .5px white;
@@ -174,7 +189,8 @@ body {
 	width: 100%;
 	display: inline-block;
 	text-align: center;
-	margin-bottom: 50px;
+	margin-bottom: 15px;
+	margin-top: 15px;
 }
 
 .feature-div {
@@ -188,9 +204,25 @@ body {
 	width: 100%;
 }
 
+.img-rounded {
+	border-radius: 10px;
+}
+
+.white-background {
+	background-color: white;
+}
+
+.insignia {
+	max-width: 200px;
+}
+
 .feature-text {
 	text-align: center;
 	font-size: 1em;
+}
+
+.credit-hr {
+	border-color: #555555;
 }
 
 .drawing-pointer {
@@ -273,5 +305,29 @@ body {
 	}
 	to {
 		opacity: 0;
+	}
+}
+
+@media screen and (max-width: 960px) {
+	.feature-div {
+		width: 45%;
+		margin-right: 0;
+		margin-left: 0;
+	}
+	.back-to-map {
+		right: 20px;
+	}
+}
+
+@media screen and (max-width: 580px) {
+	.feature-div {
+		width: 90%;
+	}
+	.credit-title {
+		text-align: left;
+		padding-left: 20px;
+	}
+	.credit-hr {
+		border-color: #999999;
 	}
 }

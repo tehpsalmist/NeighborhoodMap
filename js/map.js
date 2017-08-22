@@ -333,3 +333,38 @@ function handleLocationError(browserCompatible) {
     'Error: Your browser doesn\'t support geolocation.');
   duhVyooMahdul.zoomSearchAlert('');
 }
+
+function searchWithinTime() {
+  // Initialize the distance matrix service.
+  var distanceMatrixService = new google.maps.DistanceMatrixService;
+  var address = document.getElementById('search-within-time-text').value;
+  // Check to make sure the place entered isn't blank.
+  if (address == '') {
+    window.alert('You must enter an address.');
+  } else {
+    hideMarkers(markers);
+    // Use the distance matrix service to calculate the duration of the
+    // routes between all our markers, and the destination address entered
+    // by the user. Then put all the origins into an origin matrix.
+    var origins = [];
+    for (var i = 0; i < markers.length; i++) {
+      origins[i] = markers[i].position;
+    }
+    var destination = address;
+    var mode = document.getElementById('mode').value;
+    // Now that both the origins and destination are defined, get all the
+    // info for the distances between them.
+    distanceMatrixService.getDistanceMatrix({
+      origins: origins,
+      destinations: [destination],
+      travelMode: google.maps.TravelMode[mode],
+      unitSystem: google.maps.UnitSystem.IMPERIAL,
+    }, function(response, status) {
+      if (status !== google.maps.DistanceMatrixStatus.OK) {
+        window.alert('Error was: ' + status);
+      } else {
+        displayMarkersWithinTime(response);
+      }
+    });
+  }
+}
