@@ -9,75 +9,75 @@
 	</head>
 	<body>
 		<div class="container">
-			<div id="sidebar" class="closed sidebar" data-bind="css: {open: visibleSidebar}">
+			<div id="sidebar" class="sidebar" data-bind="css: {open: visibleSidebar, closed: chevronRight}">
 				<div id="sidebar-content">
 					<h1 class="title">
 						Find a Place to Skate!
 					</h1>
-					<button class="button search-button" data-bind="click: browseClick">
-						Browse from a specific location
-					</button>
-					<form id="browse-location" class="search-form" data-bind="visible: browse, submit: zoomToArea">
-						<input type="text" id="zoomSearch" placeholder="Where will your journey begin?" class="input" data-bind="textInput: address">
-						<p data-bind="visible: zoomSearchAlert, text: zoomSearchAlert"></p>
-						<p data-bind="visible: userLoc, text: userLoc"></p>
-						<div class="button-container">
-							<button class="button go-button" type="submit" data-bind="click: zoomToArea">
-								Go!
-							</button>
-							<button class="button go-button" data-bind="click: zoomToStart">
-								Reset Map
-							</button>
-							<button class="button go-button" data-bind="click: discoverUserLocation">
-								Use My Location
-							</button>
-						</div>
-					</form>
-					<button class="button search-button" data-bind="click: showDrawingPointer">
-						Draw a search area
-					</button>
-					<form class="search-form" data-bind="visible: shapes">
-						<p data-bind="visible: radiusResult">
-							You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
-						</p>
-						<div class="button-container">
-							<button class="button go-button" data-bind="visible: shapes, click: clearShapes">
-								Clear <span data-bind="text: typeOfShape"></span>
-							</button>
-						</div>
-					</form>
-					<button class="button search-button" data-bind="click: showDetails">
-						Search by Name/Details
-					</button>
-					<button class="button search-button" data-bind="click: showDistance">
-						Search within distance
-					</button>
-					<form class="search-form" data-bind="visible: distance">
-						<select>
-							<option value="10">10 min</option>
-	            <option value="15">15 min</option>
-	            <option value="30">30 min</option>
-	            <option value="60">1 hour</option>
-	            <option value="120">2 hours</option>
-	            <option value="240">4 hours</option>
-						</select>
-						<select>
-							<option value="DRIVING">By Car</option>
-	            <option value="WALKING">By Foot</option>
-	            <option value="BICYCLING">By Bike</option>
-						</select>
-					</form>
-					
+					<section class="button-area">
+						<button class="button search-button" data-bind="click: browseClick">
+							Browse from a specific location
+						</button>
+						<form id="browse-location" class="search-form" data-bind="visible: browse, submit: zoomToArea">
+							<input type="text" id="zoomSearch" placeholder="Where will your journey begin?" class="input" data-bind="textInput: address">
+							<p data-bind="visible: zoomSearchAlert, text: zoomSearchAlert"></p>
+							<p data-bind="visible: userLoc, text: userLoc"></p>
+							<div class="button-container">
+								<button class="button go-button" type="submit" data-bind="click: zoomToArea">
+									Go!
+								</button>
+								<button class="button go-button" data-bind="click: zoomToStart">
+									Reset Map
+								</button>
+								<button class="button go-button" data-bind="click: discoverUserLocation">
+									Use My Location
+								</button>
+							</div>
+						</form>
+						<button class="button search-button" data-bind="click: showDrawingPointer">
+							Draw a search area
+						</button>
+						<form class="search-form" data-bind="visible: shapes">
+							<p data-bind="visible: radiusResult">
+								You drew a search radius of <span data-bind="text: radiusResult"></span> miles.
+							</p>
+							<div class="button-container">
+								<button class="button go-button" data-bind="visible: shapes, click: clearShapes">
+									Clear <span data-bind="text: typeOfShape"></span>
+								</button>
+							</div>
+						</form>
+						<button class="button search-button" data-bind="click: showDetails">
+							Search by Name/Details
+						</button>
+						<button class="button search-button" data-bind="click: showDistance">
+							Search within distance
+						</button>
+						<form class="search-form" data-bind="visible: distance">
+							<select>
+								<option value="10">10 min</option>
+		            <option value="15">15 min</option>
+		            <option value="30">30 min</option>
+		            <option value="60">1 hour</option>
+		            <option value="120">2 hours</option>
+		            <option value="240">4 hours</option>
+							</select>
+							<select>
+								<option value="DRIVING">By Car</option>
+		            <option value="WALKING">By Foot</option>
+		            <option value="BICYCLING">By Bike</option>
+							</select>
+						</form>
+					</section>
+
 					<h2 data-bind="visible: searchResults">
 						Search Results:
 					</h2>
-					<div class="search-results">
-						<div class="search-item">Thing</div>
-						<div class="search-item">thing</div>
-						<div class="search-item">thing</div>
-						<div class="search-item">thing</div>
-						<div class="search-item">thing</div>
-						<div class="search-item">thing</div>
+					<div class="search-results" data-bind="foreach: searchResultsArray">
+						<div class="search-item">
+							<h3 data-bind="text: title"></h3>
+							<p data-bind="text: type"></p>
+						</div>
 					</div>
 					<p class="credit-button" data-bind="click: creditClick"> <!-- data-bind="click: openCredits" -->
 						Credits
@@ -86,7 +86,7 @@
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
 			</div>
 
-			<div class="fa fa-chevron-down fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer}"></div>
+			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp} "></div>
 
 			<div class="credits" data-bind="visible: credits">
 				<h1 class="credit-title">

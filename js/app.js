@@ -54,13 +54,34 @@ function ViewModel() {
 			self.fadePointer(false);
 		}, 4600);
 	}
+	this.chevronUp = ko.observable(false);
+	this.chevronDown = ko.observable(true);
+	var mobileView = window.matchMedia( "(max-width: 580px)" );
+  if (mobileView.matches) {
+    self.chevronUp(true);
+    self.chevronDown(false);
+  } else {
+    self.chevronUp(false);
+    self.chevronDown(true);
+  }
 
 	// Marking and saving a new skatespot
 	this.newSpot = ko.computed(function() {
 		return newMarker();
 	});
+	
+	this.searchResultsArray = ko.observableArray();
+	this.searchResults = ko.computed(function() {
+		if (self.searchResultsArray().length > 0) {
+			return true;
+		} else {
+			return false;
+		};
+	}, this);
 
-	this.searchResults = ko.observable(false);
+	
+
+
 
 	// Browse from Location button
 	this.browse = ko.observable(false);

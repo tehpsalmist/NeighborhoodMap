@@ -73,76 +73,72 @@ function initMap() {
     streetViewControl: true,
     rotateControl: true
   });
+  
+  var mobile = window.matchMedia( "(max-width: 580px)" );
+  if (mobile.matches) {
+    var drawingManager = new google.maps.drawing.DrawingManager();
+    drawingManager.setMap(map);
+    drawingManager.setOptions({
+      drawingControlOptions: {
+        drawingModes: ['circle', 'polygon', 'marker'],
+        position: google.maps.ControlPosition.TOP_CENTER
+      }
+    });
+  } else {
+    var drawingManager = new google.maps.drawing.DrawingManager();
+  	drawingManager.setMap(map);
+  	drawingManager.setOptions({
+  	  drawingControlOptions: {
+  	    drawingModes: ['circle', 'polygon', 'marker'],
+  	    position: google.maps.ControlPosition.BOTTOM_CENTER
+  	  }
+  	});
+  }
 
-  var drawingManager = new google.maps.drawing.DrawingManager();
-	drawingManager.setMap(map);
-	drawingManager.setOptions({
-	  drawingControlOptions: {
-	    drawingModes: ['circle', 'polygon', 'marker'],
-	    position: google.maps.ControlPosition.BOTTOM_CENTER
-	  }
-	});
 
 	for (var i = 0; i < locations.length; i++) {
+    var position = locations[i].location;
+    var title = locations[i].title;
+    var type = locations[i].type;
+    // Create a marker per location, and put into markers array.
+    var marker = new google.maps.Marker({
+      position: position,
+      title: title,
+      animation: google.maps.Animation.DROP,
+      id: i,
+      map: map,
+      type: type
+    });
+    // Push the marker to our array of markers.
+    markers.push(marker);
+    // Create an onclick event to open the large infowindow at each marker.
+    marker.addListener('click', function() {
+      populateInfoWindow(this, spotInfowindow);
+    });
+    // Two event listeners - one for mouseover, one for mouseout,
+    // to change the colors back and forth.
+    marker.addListener('click', function() {
+      markerBounce(this);
+    });
+
+    // if statement controls which icon will be used for each spot
     if (locations[i].type === 'spot') {
-      // Get the position from the location array.
-      var position = locations[i].location;
-      var title = locations[i].title;
-      // Create a marker per location, and put into markers array.
-      var marker = new google.maps.Marker({
-        position: position,
-        title: title,
-        animation: google.maps.Animation.DROP,
-        icon: spotIcon,
-        id: i,
-        map: map
-      });
-      // Push the marker to our array of markers.
-      markers.push(marker);
-      // Create an onclick event to open the large infowindow at each marker.
-      marker.addListener('click', function() {
-        populateInfoWindow(this, spotInfowindow);
-      });
-      // Two event listeners - one for mouseover, one for mouseout,
-      // to change the colors back and forth.
+      marker.setIcon(spotIcon);
+      
       marker.addListener('mouseover', function() {
         this.setIcon(hoveredSpotIcon);
       });
       marker.addListener('mouseout', function() {
         this.setIcon(spotIcon);
       });
-      marker.addListener('click', function() {
-        markerBounce(this);
-      });
     } else if (locations[i].type === 'park') {
-      // Get the position from the location array.
-      var position = locations[i].location;
-      var title = locations[i].title;
-      // Create a marker per location, and put into markers array.
-      var marker = new google.maps.Marker({
-        position: position,
-        title: title,
-        animation: google.maps.Animation.DROP,
-        icon: parkIcon,
-        id: i,
-        map: map
-      });
-      // Push the marker to our array of markers.
-      markers.push(marker);
-      // Create an onclick event to open the large infowindow at each marker.
-      marker.addListener('click', function() {
-        populateInfoWindow(this, spotInfowindow);
-      });
-      // Two event listeners - one for mouseover, one for mouseout,
-      // to change the colors back and forth.
+      marker.setIcon(parkIcon);
+      
       marker.addListener('mouseover', function() {
         this.setIcon(hoveredParkIcon);
       });
       marker.addListener('mouseout', function() {
         this.setIcon(parkIcon);
-      });
-      marker.addListener('click', function() {
-        markerBounce(this);
       });
     }
   }
@@ -203,9 +199,11 @@ function initMap() {
 }
 
 function searchWithinPolygon() {
+  duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(markers[i].position, shape())) {
       markers[i].setMap(map);
+      duhVyooMahdul.searchResultsArray.push(markers[i]);
     } else {
       markers[i].setMap(null);
     }
@@ -213,9 +211,11 @@ function searchWithinPolygon() {
 }
 
 function searchWithinCircle() {
+  duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.spherical.computeDistanceBetween(markers[i].getPosition(), shape().getCenter()) <= shape().getRadius()) {
       markers[i].setMap(map);
+      duhVyooMahdul.searchResultsArray.push(markers[i]);
     } else {
       markers[i].setMap(null);
     }
