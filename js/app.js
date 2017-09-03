@@ -70,6 +70,8 @@ function ViewModel() {
 		return newMarker();
 	});
 	
+	// These observables keep track of the resulting data objects
+	// from each location when a search is executed
 	this.searchResultsArray = ko.observableArray();
 	this.searchResults = ko.computed(function() {
 		if (self.searchResultsArray().length > 0) {
@@ -78,10 +80,6 @@ function ViewModel() {
 			return false;
 		};
 	}, this);
-
-	
-
-
 
 	// Browse from Location button
 	this.browse = ko.observable(false);
@@ -116,7 +114,7 @@ function ViewModel() {
 			self.details(false);
 		}
 	}
-	// Search within a distance of a location
+	// Clicking the search within distance button
 	this.distance = ko.observable(false);
 	this.showDistance = function() {
 		if (self.distance() === false) {
@@ -126,6 +124,47 @@ function ViewModel() {
 		} else {
 			self.distance(false);
 		}
+	};
+	// Search within a distance of a location
+	this.centerLocation = ko.observable();
+	this.centerLocationAddress = ko.observable('');
+	this.mode = ko.observable("DRIVING");
+	this.time = ko.observable("10");
+	this.distanceSearchAlert = ko.observable('');
+	this.typing = ko.observable(false);
+	this.locationMethod = ko.observable("chooseCenter");
+	this.locationMethodChange = function() {
+		self.distanceSearchAlert('');
+		if (self.locationMethod() === "userLocation") {
+			discoverUserLocation();
+			this.centerLocationAddress('');
+			self.typing(false);
+		} else if (self.locationMethod() === "dropMarker") {
+			drawingManager.setDrawingMode('marker');
+			this.centerLocationAddress('');
+			self.typing(false);
+			if (newMarker() === null) {
+				self.centerLocation(null);
+			} else {
+				self.centerLocation(newMarker().position);
+			}
+		} else if (self.locationMethod() === "typeAddress") {
+			self.centerLocation(null);
+			self.typing(true);
+		} else {
+			self.centerLocation(null);
+			self.typing(false);
+		};
+	};
+	this.runDistanceSearch = function() {
+		if (self.locationMethod() === "typeAddress") {
+			distanceGeocoder();
+		};
+		if (!self.centerLocation()) {
+			self.distanceSearchAlert('Gotta pick a starting location, bro.');
+		} else {
+			searchWithinTime();
+		};
 	}
 
 	// show the credits!

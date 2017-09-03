@@ -8,6 +8,8 @@ var shape = ko.observable(null);
 
 var radius = ko.observable(null);
 
+var drawingManager = '';
+
 var locations = [
 	{title: 'Quakertown Action Park', type: 'park', location: {lat: 40.430491, lng: -75.344964}},
   {title: 'Bethlehem Skate Plaza', type: 'park', location: {lat: 40.612325, lng: -75.355298}},
@@ -61,6 +63,13 @@ function initMap() {
     duhVyooMahdul.address(result.formatted_address);
   });
 
+  var distanceAutocomplete = new google.maps.places.Autocomplete(document.getElementById('center-location'));
+
+  google.maps.event.addListener(distanceAutocomplete, 'place_changed', function() {
+    result = distanceAutocomplete.getPlace();
+    duhVyooMahdul.centerLocationAddress(result.formatted_address);
+  });
+
   var spotInfowindow = new google.maps.InfoWindow();
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -76,7 +85,7 @@ function initMap() {
   
   var mobile = window.matchMedia( "(max-width: 580px)" );
   if (mobile.matches) {
-    var drawingManager = new google.maps.drawing.DrawingManager();
+    drawingManager = new google.maps.drawing.DrawingManager();
     drawingManager.setMap(map);
     drawingManager.setOptions({
       drawingControlOptions: {
@@ -85,7 +94,7 @@ function initMap() {
       }
     });
   } else {
-    var drawingManager = new google.maps.drawing.DrawingManager();
+    drawingManager = new google.maps.drawing.DrawingManager();
   	drawingManager.setMap(map);
   	drawingManager.setOptions({
   	  drawingControlOptions: {
@@ -168,6 +177,7 @@ function initMap() {
       duhVyooMahdul.typeOfShape('Marker');
       showMarkers(markers);
       newMarker(event.overlay);
+      duhVyooMahdul.centerLocation(newMarker().position);
     }
 
     if (event.type === 'polygon') {
@@ -204,6 +214,8 @@ function searchWithinPolygon() {
     if (google.maps.geometry.poly.containsLocation(markers[i].position, shape())) {
       markers[i].setMap(map);
       duhVyooMahdul.searchResultsArray.push(markers[i]);
+      var divID = duhVyooMahdul.searchResultsArray().length - 1;
+      populateSearchResults(markers[i], divID);
     } else {
       markers[i].setMap(null);
     }
@@ -216,6 +228,8 @@ function searchWithinCircle() {
     if (google.maps.geometry.spherical.computeDistanceBetween(markers[i].getPosition(), shape().getCenter()) <= shape().getRadius()) {
       markers[i].setMap(map);
       duhVyooMahdul.searchResultsArray.push(markers[i]);
+      var divID = duhVyooMahdul.searchResultsArray().length - 1;
+      populateSearchResults(markers[i], divID);
     } else {
       markers[i].setMap(null);
     }
@@ -287,14 +301,14 @@ function populateInfoWindow(marker, infowindow) {
 
 function zoomToArea() {
   // Initialize the geocoder.
-  var geocoder = new google.maps.Geocoder();
+  var zoomGeocoder = new google.maps.Geocoder();
   // Make sure the address isn't blank.
   if (duhVyooMahdul.address() === '') {
     duhVyooMahdul.zoomSearchAlert('Gotta type something, bro.');
   } else {
   // Geocode the address/area entered to get the center. Then, center the map
   // on it and zoom in
-  geocoder.geocode(
+  zoomGeocoder.geocode(
     {address: duhVyooMahdul.address()},
     function(results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
@@ -311,13 +325,13 @@ function zoomToArea() {
 function discoverUserLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
+      duhVyooMahdul.centerLocation({
         lat: position.coords.latitude,
         lng: position.coords.longitude
-      };
+      });
       duhVyooMahdul.userLoc('There you are! Happy skating!');
       duhVyooMahdul.zoomSearchAlert('');
-      map.setCenter(pos);
+      map.setCenter(duhVyooMahdul.centerLocation());
     }, function() {
       handleLocationError(true);
     });
@@ -334,37 +348,114 @@ function handleLocationError(browserCompatible) {
   duhVyooMahdul.zoomSearchAlert('');
 }
 
+function distanceGeocoder() {
+  // Initialize the geocoder.
+  var distanceGeocoder = new google.maps.Geocoder();
+  // Make sure the address isn't blank.
+  if (duhVyooMahdul.centerLocationAddress() === '') {
+    duhVyooMahdul.distanceSearchAlert('Gotta type something, bro.');
+  } else {
+  // Geocode the address/area entered to get the center. Then, center the map
+  // on it and zoom in
+  distanceGeocoder.geocode(
+    {address: duhVyooMahdul.centerLocationAddress()},
+    function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK) {
+        duhVyooMahdul.centerLocation(results[0].geometry.location);
+        duhVyooMahdul.distanceSearchAlert('');
+      } else {
+        duhVyooMahdul.distanceSearchAlert('We could not find that location - try entering a more specific place.');
+      };
+    });
+  }
+}
+
 function searchWithinTime() {
   // Initialize the distance matrix service.
   var distanceMatrixService = new google.maps.DistanceMatrixService;
-  var address = document.getElementById('search-within-time-text').value;
   // Check to make sure the place entered isn't blank.
-  if (address == '') {
-    window.alert('You must enter an address.');
-  } else {
-    hideMarkers(markers);
-    // Use the distance matrix service to calculate the duration of the
-    // routes between all our markers, and the destination address entered
-    // by the user. Then put all the origins into an origin matrix.
-    var origins = [];
-    for (var i = 0; i < markers.length; i++) {
-      origins[i] = markers[i].position;
-    }
-    var destination = address;
-    var mode = document.getElementById('mode').value;
-    // Now that both the origins and destination are defined, get all the
-    // info for the distances between them.
-    distanceMatrixService.getDistanceMatrix({
-      origins: origins,
-      destinations: [destination],
-      travelMode: google.maps.TravelMode[mode],
-      unitSystem: google.maps.UnitSystem.IMPERIAL,
-    }, function(response, status) {
-      if (status !== google.maps.DistanceMatrixStatus.OK) {
-        window.alert('Error was: ' + status);
-      } else {
-        displayMarkersWithinTime(response);
-      }
-    });
+  hideMarkers(markers);
+  // Use the distance matrix service to calculate the duration of the
+  // routes between all our markers, and the destination address entered
+  // by the user. Then put all the origins into an origin matrix.
+  var origins = [];
+  for (var i = 0; i < markers.length; i++) {
+    origins[i] = markers[i].position;
   }
+  // Now that both the origins and destination are defined, get all the
+  // info for the distances between them.
+  distanceMatrixService.getDistanceMatrix({
+    origins: origins,
+    destinations: [duhVyooMahdul.centerLocation()],
+    travelMode: google.maps.TravelMode[duhVyooMahdul.mode()],
+    unitSystem: google.maps.UnitSystem.IMPERIAL,
+  }, function(response, status) {
+    if (status !== google.maps.DistanceMatrixStatus.OK) {
+      window.alert('Error was: ' + status);
+    } else {
+      displayMarkersWithinTime(response);
+    }
+  });
+}
+
+function displayMarkersWithinTime(response) {
+  var origins = response.originAddresses;
+  var destinations = response.destinationAddresses;
+  // Parse through the results, and get the distance and duration of each.
+  // Because there might be  multiple origins and destinations we have a nested loop
+  // Then, make sure at least 1 result was found.
+  var atLeastOne = false;
+  duhVyooMahdul.searchResultsArray.removeAll();
+  for (var i = 0; i < origins.length; i++) {
+    var results = response.rows[i].elements;
+    for (var j = 0; j < results.length; j++) {
+      var element = results[j];
+      if (element.status === "OK") {
+        // The distance is returned in feet, but the TEXT is in miles. If we wanted to switch
+        // the function to show markers within a user-entered DISTANCE, we would need the
+        // value for distance, but for now we only need the text.
+        var distanceText = element.distance.text;
+        console.log(element);
+        // Duration value is given in seconds so we make it MINUTES. We need both the value
+        // and the text.
+        var duration = element.duration.value / 60;
+        if (duration <= duhVyooMahdul.time()) {
+          //the origin [i] should = the markers[i]  
+          atLeastOne = true;
+          markers[i].setMap(map);
+          markers[i].distanceObj = element;
+          duhVyooMahdul.searchResultsArray.push(markers[i]);
+          var divID = duhVyooMahdul.searchResultsArray().length - 1;
+          populateSearchResults(markers[i], divID);
+        }
+      }
+    }
+  }
+  if (!atLeastOne) {
+    window.alert('We could not find any locations within that distance!');
+  }
+}
+
+function populateSearchResults(marker, div) {
+  var streetViewService = new google.maps.StreetViewService();
+  var streetRadius = 500;
+  function getStreetView(data, status) {
+    if (status === google.maps.StreetViewStatus.OK) {
+      var nearStreetViewLocation = data.location.latLng;
+      var heading = google.maps.geometry.spherical.computeHeading(
+        nearStreetViewLocation, marker.position);
+        var panoramaOptions = {
+          position: nearStreetViewLocation,
+          pov: {
+            heading: heading,
+            pitch: 0
+          }
+        };
+      var panorama = new google.maps.StreetViewPanorama(
+        document.getElementById(div), panoramaOptions);
+    } else {
+      document.getElementById(div).innerHTML('No Street View Found');
+    }
+  }
+  streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetView);
 }

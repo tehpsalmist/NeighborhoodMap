@@ -54,7 +54,7 @@
 							Search within distance
 						</button>
 						<form class="search-form" data-bind="visible: distance">
-							<select>
+							<select id="distanceInTime" class="input auto-width" data-bind="textInput: time">
 								<option value="10">10 min</option>
 		            <option value="15">15 min</option>
 		            <option value="30">30 min</option>
@@ -62,21 +62,36 @@
 		            <option value="120">2 hours</option>
 		            <option value="240">4 hours</option>
 							</select>
-							<select>
+							<select id="mode" class="input auto-width" data-bind="textInput: mode">
 								<option value="DRIVING">By Car</option>
 		            <option value="WALKING">By Foot</option>
 		            <option value="BICYCLING">By Bike</option>
 							</select>
+							from
+							<select id="distanceCenter" class="input auto-width" data-bind="event: {change: locationMethodChange}, textInput: locationMethod">
+								<option value="chooseCenter">*Starting Location*</option>
+								<option value="userLocation">My Location</option>
+								<option value="dropMarker">A Marker</option>
+								<option value="typeAddress">An Address</option>
+							</select>
+							<input type="text" id="center-location" class="input" data-bind="textInput: centerLocationAddress, visible: typing">
+							<button class="button go-button" data-bind="click: runDistanceSearch">Search!</button>
+							<p data-bind="visible: distanceSearchAlert, text: distanceSearchAlert"></p>
 						</form>
 					</section>
 
-					<h2 data-bind="visible: searchResults">
+					<h2 class="title" data-bind="visible: searchResults">
 						Search Results:
 					</h2>
-					<div class="search-results" data-bind="foreach: searchResultsArray">
+					<div id="search-results" class="search-results" data-bind="foreach: searchResultsArray">
 						<div class="search-item">
-							<h3 data-bind="text: title"></h3>
-							<p data-bind="text: type"></p>
+							<h3>(<span class="capitalize" data-bind="text: type"></span>)--<span data-bind="text: title"></span></h3>
+							<div class="media-container">
+								<div class="media street-view" data-bind="attr: {id: $index}"></div>
+								<div class="media">
+									<img src="images/ko-logo.png">
+								</div>
+							</div>
 						</div>
 					</div>
 					<p class="credit-button" data-bind="click: creditClick"> <!-- data-bind="click: openCredits" -->
@@ -84,9 +99,10 @@
 					</p>
 				</div>
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
+				<button id="close-button" class="fa fa-times fa-2x" data-bind="click: toggleSidebar"></button>
 			</div>
 
-			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp} "></div>
+			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp}"></div>
 
 			<div class="credits" data-bind="visible: credits">
 				<h1 class="credit-title">
