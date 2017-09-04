@@ -65,7 +65,7 @@ a {
 	background-color: rgba(173, 190, 230, 0.6);
 	border: 0;
 	border-radius: 10px;
-	padding: 10px;
+	padding: 7px;
 }
 
 .input {
@@ -114,6 +114,7 @@ a {
 
 .search-results {
 	overflow-y: scroll;
+	text-align: center;
 }
 
 .search-item {

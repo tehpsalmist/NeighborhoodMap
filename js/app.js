@@ -54,6 +54,9 @@ function ViewModel() {
 			self.fadePointer(false);
 		}, 4600);
 	}
+
+	// Scripts that interact with media queries to display items
+	// correctly based on screen size.
 	this.chevronUp = ko.observable(false);
 	this.chevronDown = ko.observable(true);
 	var mobileView = window.matchMedia( "(max-width: 580px)" );
@@ -86,8 +89,6 @@ function ViewModel() {
 	this.browseClick = function() {
 		if (self.browse() === false) {
 			self.browse(true);
-			self.details(false);
-			self.distance(false);
 		} else {
 			self.browse(false);
 		}
@@ -97,29 +98,31 @@ function ViewModel() {
 	this.zoomSearchAlert = ko.observable('');
 	this.zoomToStart = function() {
 		map.setCenter({lat: 40.430491, lng: -75.344964});
-    map.setZoom(19);
+    map.setZoom(15);
     self.address('');
     self.zoomSearchAlert('');
     self.userLoc('');
 	}
 
-	// Search within certain detail parameters
+	// Clicking the type button
 	this.details = ko.observable(false);
 	this.showDetails = function() {
 		if (self.details() === false) {
-			self.browse(false);
 			self.details(true);
-			self.distance(false);
 		} else {
 			self.details(false);
 		}
 	}
+
+	// Type filtering
+	this.parks = ko.observable(false);
+	this.spots = ko.observable(false);
+	this.useFilter = ko.observable(false);
+
 	// Clicking the search within distance button
 	this.distance = ko.observable(false);
 	this.showDistance = function() {
 		if (self.distance() === false) {
-			self.browse(false);
-			self.details(false);
 			self.distance(true);
 		} else {
 			self.distance(false);
@@ -164,7 +167,29 @@ function ViewModel() {
 			self.distanceSearchAlert('Gotta pick a starting location, bro.');
 		} else {
 			searchWithinTime();
+			self.distanceSearchAlert('');
 		};
+	}
+
+	// Interacting with the search results
+	this.showMediaFunction = function() {
+		if (this.showMedia()) {
+			this.showMedia(false);
+		} else {
+			this.showMedia(true);
+			this.pano.setVisible(true);
+		};
+	}
+	this.goToMarker = function(marker) {
+		map.setCenter(marker.position);
+		map.setZoom(17);
+		marker.setAnimation(google.maps.Animation.BOUNCE)
+		setTimeout(function() {
+			marker.setAnimation(null);
+		}, 3000);
+	}
+	this.clearSearchResults = function() {
+		self.searchResultsArray([]);
 	}
 
 	// show the credits!

@@ -74,7 +74,7 @@ function initMap() {
 
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.430491, lng: -75.344964},
-    zoom: 20,
+    zoom: 15,
     mapTypeControl: true,
     mapTypeId: 'satellite',
     zoomControl: true,
@@ -208,14 +208,19 @@ function initMap() {
   });
 }
 
+function foundTheMarker(marker) {
+  marker.setMap(map);
+  marker.showMedia = ko.observable(false);
+  duhVyooMahdul.searchResultsArray.push(marker);
+  var divID = duhVyooMahdul.searchResultsArray().length - 1;
+  populateSearchResults(marker, divID);
+}
+
 function searchWithinPolygon() {
   duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(markers[i].position, shape())) {
-      markers[i].setMap(map);
-      duhVyooMahdul.searchResultsArray.push(markers[i]);
-      var divID = duhVyooMahdul.searchResultsArray().length - 1;
-      populateSearchResults(markers[i], divID);
+      foundTheMarker(markers[i]);
     } else {
       markers[i].setMap(null);
     }
@@ -226,10 +231,7 @@ function searchWithinCircle() {
   duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.spherical.computeDistanceBetween(markers[i].getPosition(), shape().getCenter()) <= shape().getRadius()) {
-      markers[i].setMap(map);
-      duhVyooMahdul.searchResultsArray.push(markers[i]);
-      var divID = duhVyooMahdul.searchResultsArray().length - 1;
-      populateSearchResults(markers[i], divID);
+      foundTheMarker(markers[i]);
     } else {
       markers[i].setMap(null);
     }
@@ -415,18 +417,14 @@ function displayMarkersWithinTime(response) {
         // the function to show markers within a user-entered DISTANCE, we would need the
         // value for distance, but for now we only need the text.
         var distanceText = element.distance.text;
-        console.log(element);
         // Duration value is given in seconds so we make it MINUTES. We need both the value
         // and the text.
         var duration = element.duration.value / 60;
         if (duration <= duhVyooMahdul.time()) {
           //the origin [i] should = the markers[i]  
           atLeastOne = true;
-          markers[i].setMap(map);
           markers[i].distanceObj = element;
-          duhVyooMahdul.searchResultsArray.push(markers[i]);
-          var divID = duhVyooMahdul.searchResultsArray().length - 1;
-          populateSearchResults(markers[i], divID);
+          foundTheMarker(markers[i]);
         }
       }
     }
@@ -451,8 +449,8 @@ function populateSearchResults(marker, div) {
             pitch: 0
           }
         };
-      var panorama = new google.maps.StreetViewPanorama(
-        document.getElementById(div), panoramaOptions);
+      var panorama = new google.maps.StreetViewPanorama(document.getElementById(div), panoramaOptions);
+      marker.pano = panorama;
     } else {
       document.getElementById(div).innerHTML('No Street View Found');
     }
