@@ -6,6 +6,8 @@
 		<title>Goodlums Skate Spots</title>
 		<link rel="stylesheet" href="styles/styles.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	  <script defer src='js/knockout-3.4.2.js'></script>
+		<script defer src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -47,14 +49,6 @@
 								</button>
 							</div>
 						</form>
-						<button class="button search-button" data-bind="click: showDetails">
-							Show Spots by Type
-						</button>
-						<form class="search-form" data-bind="visible: details">
-							<p><span><input type="checkbox" name="type" data-bind="checked: parks">Parks</span>
-							<span><input type="checkbox" name="type" data-bind="checked: spots">Spots</span></p>
-							<p><input type="checkbox" name="filter" data-bind="checked: useFilter">Use as Filter</p>
-						</form>
 						<button class="button search-button" data-bind="click: showDistance">
 							Search within distance
 						</button>
@@ -91,6 +85,7 @@
 					<div id="search-results" class="search-results" data-bind="foreach: searchResultsArray">
 						<div class="search-item">
 							<h3>(<span class="capitalize" data-bind="text: type"></span>)--<span data-bind="text: title"></span></h3>
+							<p><span data-bind="text: distanceObj.distance.text"></span></p>
 							<button class="button go-button" data-bind="text: showMedia() === true ? 'Hide Media' : 'Show Media', click: $parent.showMediaFunction"></button>
 							<button class="button go-button" data-bind="click: $parent.goToMarker">Show on Map</button>
 							<div class="media-container" data-bind="visible: showMedia">
@@ -264,17 +259,13 @@
 
 		-->
 
-	  <script src='js/knockout-3.4.2.js'></script>
+		<script defer src="js/map.js"></script>
 		
-		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+		<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=initMap"></script>
 
-		<script async defer src="js/map.js"></script>
-		
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=initMap"></script>
+	  <script defer src="js/database.js"></script>
 
-	  <script async defer src="js/database.js"></script>
-
-	  <script async defer src="js/app.js"></script>
+	  <script defer src="js/app.js"></script>
 
 	</body>
 </html>

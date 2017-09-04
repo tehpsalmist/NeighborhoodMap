@@ -104,21 +104,6 @@ function ViewModel() {
     self.userLoc('');
 	}
 
-	// Clicking the type button
-	this.details = ko.observable(false);
-	this.showDetails = function() {
-		if (self.details() === false) {
-			self.details(true);
-		} else {
-			self.details(false);
-		}
-	}
-
-	// Type filtering
-	this.parks = ko.observable(false);
-	this.spots = ko.observable(false);
-	this.useFilter = ko.observable(false);
-
 	// Clicking the search within distance button
 	this.distance = ko.observable(false);
 	this.showDistance = function() {
