@@ -208,8 +208,9 @@ function initMap() {
   });
 }
 
-function foundTheMarker(marker) {
+function foundTheMarker(marker, distances) {
   marker.setMap(map);
+  marker.distanceObj = distances;
   marker.showMedia = ko.observable(false);
   duhVyooMahdul.searchResultsArray.push(marker);
   var divID = duhVyooMahdul.searchResultsArray().length - 1;
@@ -220,7 +221,7 @@ function searchWithinPolygon() {
   duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(markers[i].position, shape())) {
-      foundTheMarker(markers[i]);
+      foundTheMarker(markers[i], false);
     } else {
       markers[i].setMap(null);
     }
@@ -231,7 +232,7 @@ function searchWithinCircle() {
   duhVyooMahdul.searchResultsArray.removeAll();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.spherical.computeDistanceBetween(markers[i].getPosition(), shape().getCenter()) <= shape().getRadius()) {
-      foundTheMarker(markers[i]);
+      foundTheMarker(markers[i], false);
     } else {
       markers[i].setMap(null);
     }
@@ -423,8 +424,7 @@ function displayMarkersWithinTime(response) {
         if (duration <= duhVyooMahdul.time()) {
           //the origin [i] should = the markers[i]  
           atLeastOne = true;
-          markers[i].distanceObj = element;
-          foundTheMarker(markers[i]);
+          foundTheMarker(markers[i], element);
         }
       }
     }
@@ -456,4 +456,24 @@ function populateSearchResults(marker, div) {
     }
   }
   streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetView);
+}
+
+function instaMarkers() {
+  for (var i = markers.length - 1; i >= 0; i--) {
+    var url = "https://api.instagram.com/v1/locations/search?lat=" + markers[i].location.lat + "&lng=" + markers[i].location.lat + "&access_token=" + duhVyooMahdul.accessToken();
+    var iDrequest = new XMLHttpRequest();
+
+    iDrequest.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var instaData = JSON.parse(this.responseText);
+        addIDProperty(instaData);
+        }
+    };
+    iDrequest.open("GET", url, true);
+    iDrequest.send();
+
+    function addIDProperty(data) {
+      markers[i].instaID = data[0].id;
+    }
+  }
 }
