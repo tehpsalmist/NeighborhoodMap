@@ -90,12 +90,11 @@
 							<button class="button go-button" data-bind="click: $parent.goToMarker">Show on Map</button>
 							<div class="media-container" data-bind="visible: showMedia">
 								<div class="media street-view" data-bind="attr: {id: $index}"></div>
-								<div class="media instagram-option" data-bind="visible: $parent.noInsta">
-									<a target="_blank" href="https://api.instagram.com/oauth/authorize/?client_id=d8d1b3e02e8f4f38a88ef8c2d6a5d399&redirect_uri=https://tehpsalmist.github.io/NeighborhoodMap/&response_type=token">
-										<img src="images/instagram-logo.png">
-										<p class="insta-text">Login to Instagram to view skate footage from this location!</p>
-									</a>
+								<!-- ko foreach: weatherData -->
+								<div class="media">
+									<img data-bind="attr: {src: icon_url}">
 								</div>
+								<!-- /ko -->
 							</div>
 						</div>
 					</div>
@@ -167,7 +166,7 @@
 					</div>
 				</div>
 				<hr class="credit-hr">
-				<div class="feature">
+				<!--<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img img-rounded" src="images/firebase.png">
 					</div>
@@ -178,10 +177,22 @@
 						<a href="https://firebase.google.com/docs">Learn About Firebase</a>
 					</div>
 				</div>
+				<hr class="credit-hr">-->
+				<div class="feature">
+					<div class="feature-div">
+						<img class="feature-img" src="images/wunderground.png">
+					</div>
+					<div class="feature-div">
+						<p class="feature-text">
+							This app's cutting edge weather data is supplied by Wunderground's popular API. Thank you, Wunderground.
+						</p>
+						<a href="https://www.wunderground.com/weather/api">Drown in their API docs</a>
+					</div>
+				</div>
 				<hr class="credit-hr">
 				<div class="feature">
 					<div class="feature-div">
-						<img class="feature-img " src="images/Chad-Edrupt.jpg">
+						<img class="feature-img" src="images/Chad-Edrupt.jpg">
 					</div>
 					<div class="feature-div">
 						<p class="feature-text">
@@ -197,13 +208,13 @@
 					</div>
 					<div class="feature-div">
 						<p class="feature-text">
-							Other than finding a few sweet logos on the Noun Project, I made extensive use of their color picker in their desktop app. XD
+							Other than finding a few sweet logos on the Noun Project, I made extensive use of the color picker in their desktop app. 😆
 						</p>
 						<a href="https://thenounproject.com/">The Noun Project</a>
 					</div>
 				</div>
 				<hr class="credit-hr">
-				<div class="feature">
+				<!--<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img img-rounded" src="images/chrisesplin.png">
 					</div>
@@ -214,7 +225,7 @@
 						<a href="https://howtofirebase.com/firebase-authentication-for-web-d58aad62cf6d">See for Yourself</a>
 					</div>
 				</div>
-				<hr class="credit-hr">
+				<hr class="credit-hr">-->
 				<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img img-rounded white-background insignia" src="images/insignia.png">
@@ -269,6 +280,8 @@
 	  <!-- <script defer src="js/database.js"></script> -->
 
 	  <script defer src="js/app.js"></script>
+
+	  <script defer src="js/weather.js"></script>
 
 	</body>
 </html>

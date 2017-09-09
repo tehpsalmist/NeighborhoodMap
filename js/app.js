@@ -163,7 +163,7 @@ function ViewModel() {
 		} else {
 			this.showMedia(true);
 			this.pano.setVisible(true);
-			//self.instaFetch(this);
+			self.populateForecast(this);
 		};
 	}
 	this.goToMarker = function(marker) {
@@ -177,30 +177,9 @@ function ViewModel() {
 	this.clearSearchResults = function() {
 		self.searchResultsArray([]);
 	}
-
-	// instagram stuff
-	this.accessToken = ko.observable('');
-	this.noInsta = ko.observable(true);
-	this.instaLogin = function() {
-		var iframe = document.createElement('iframe');
-		iframe.className = 'auth-iframe';
-		iframe.setAttribute('src', 'https://api.instagram.com/oauth/authorize/?client_id=d8d1b3e02e8f4f38a88ef8c2d6a5d399&redirect_uri=https://tehpsalmist.github.io/NeighborhoodMap/&response_type=token');
-		document.body.appendChild(iframe);
-		//instaMarkers();
+	this.populateForecast = function(marker) {
+		getWeatherData(marker);
 	}
-	/*this.instaFetch = function(marker) {
-		var mediaRequest = new XMLHttpRequest();
-		var url = "https://api.instagram.com/v1/locations/" + marker.instaID + "/media/recent?access_token=" + self.accessToken();
-
-		mediaRequest.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-		    var mediaData = JSON.parse(this.responseText);
-		    myFunction(mediaData);
-		    }
-		};
-		mediaRequest.open("GET", url, true);
-		mediaRequest.send();
-	}*/
 
 	// show the credits!
 	this.credits = ko.observable(false);

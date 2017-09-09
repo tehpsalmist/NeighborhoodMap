@@ -211,6 +211,7 @@ function initMap() {
 function foundTheMarker(marker, distances) {
   marker.setMap(map);
   marker.distanceObj = distances;
+  marker.weatherData = ko.observable({});
   marker.showMedia = ko.observable(false);
   duhVyooMahdul.searchResultsArray.push(marker);
   var divID = duhVyooMahdul.searchResultsArray().length - 1;
@@ -456,24 +457,4 @@ function populateSearchResults(marker, div) {
     }
   }
   streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetView);
-}
-
-function instaMarkers() {
-  for (var i = markers.length - 1; i >= 0; i--) {
-    var url = "https://api.instagram.com/v1/locations/search?lat=" + markers[i].location.lat + "&lng=" + markers[i].location.lat + "&access_token=" + duhVyooMahdul.accessToken();
-    var iDrequest = new XMLHttpRequest();
-
-    iDrequest.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var instaData = JSON.parse(this.responseText);
-        addIDProperty(instaData);
-        }
-    };
-    iDrequest.open("GET", url, true);
-    iDrequest.send();
-
-    function addIDProperty(data) {
-      markers[i].instaID = data[0].id;
-    }
-  }
 }
