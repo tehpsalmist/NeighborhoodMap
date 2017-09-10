@@ -34,7 +34,7 @@ function ViewModel() {
 		}
 		showMarkers(markers);
 		self.shapes(false);
-	}
+	};
 
 	// Causing the pointer to highlight the drawing toolbar and disappear
 	this.drawingPointer = ko.observable(false);
@@ -46,14 +46,14 @@ function ViewModel() {
 		self.distance(false);
 		setTimeout(function() {
 			self.fadePointer(true);
-		}, 3500)
+		}, 3500);
 		setTimeout(function() {
 			self.drawingPointer(false);
 		}, 4400);
 		setTimeout(function() {
 			self.fadePointer(false);
 		}, 4600);
-	}
+	};
 
 	// Scripts that interact with media queries to display items
 	// correctly based on screen size.
@@ -82,7 +82,7 @@ function ViewModel() {
 			return true;
 		} else {
 			return false;
-		};
+		}
 	}, this);
 
 	// Browse from Location button
@@ -106,7 +106,7 @@ function ViewModel() {
     self.address('');
     self.zoomSearchAlert('');
     self.userLoc('');
-	}
+	};
 
 	// Clicking the search within distance button
 	this.distance = ko.observable(false);
@@ -153,14 +153,14 @@ function ViewModel() {
 		} else {
 			self.centerLocation(null);
 			self.typing(false);
-		};
+		}
 	};
 	// Function executed when the user selects search within distance of location
 	this.runDistanceSearch = function() {
 		// If address was chosen, geocoder must be run first, to establish centerLocation
 		if (self.locationMethod() === "typeAddress") {
 			distanceGeocoder();
-		};
+		}
 		// If no location was selected to start, display message, otherwise, run the Search
 		// using the centerLocation
 		if (!self.centerLocation()) {
@@ -168,8 +168,8 @@ function ViewModel() {
 		} else {
 			searchWithinTime();
 			self.distanceSearchAlert('');
-		};
-	}
+		}
+	};
 
 	// Interacting with the search results
 
@@ -188,24 +188,24 @@ function ViewModel() {
 			}
 			// passing the marker object to the populate forecast function
 			self.populateForecast(this);
-		};
-	}
+		}
+	};
 	// When the Show on Map button is clicked
 	this.goToMarker = function(marker) {
 		map.setCenter(marker.position);
 		map.setZoom(17);
-		marker.setAnimation(google.maps.Animation.BOUNCE)
+		marker.setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function() {
 			marker.setAnimation(null);
 		}, 3000);
-	}
+	};
 	this.clearSearchResults = function() {
 		self.searchResultsArray([]);
-	}
+	};
 	// Calling the Weather Underground XHR request function
 	this.populateForecast = function(marker) {
 		getWeatherData(marker);
-	}
+	};
 	// observables that control loading and error messages for weather requests
 	this.weatherLoading = ko.observable(false);
 	this.weatherRequestError = ko.observable('');
@@ -217,7 +217,7 @@ function ViewModel() {
 			self.credits(true);
 		} else {
 			self.credits(false);
-		};
+		}
 	};
 }
 
