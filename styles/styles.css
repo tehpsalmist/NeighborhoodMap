@@ -151,7 +151,7 @@ a {
 
 .street-view {
 	width: 80%;
-	margin: 0 10%;
+	margin: 0 5%;
 }
 
 .weather-panel {
@@ -358,12 +358,30 @@ a {
 	height: 350px;
 }
 
+.street-view-title {
+	color: #ff4b00;
+	text-shadow: 2px 2px 2px #000000;
+	text-align: center;
+}
+
+.weather-hint {
+	color: #ff4b00;
+	text-align: center;
+}
+
 .loading {
 	position: fixed;
 	top: 25px;
 	left: 0;
 	z-index: 10;
 	width: 100%;
+	text-align: center;
+	color: #ff4b00;
+}
+
+.street-view-loading {
+	display: block;
+	width: 300px;
 	text-align: center;
 	color: #ff4b00;
 }

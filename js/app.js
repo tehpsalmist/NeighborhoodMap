@@ -67,14 +67,15 @@ function ViewModel() {
     self.chevronUp(false);
     self.chevronDown(true);
   }
-
+/*
 	// Marking and saving a new skatespot
 	this.newSpot = ko.computed(function() {
 		return newMarker();
 	});
-	
+*/
 	// These observables keep track of the resulting data objects
-	// from each location when a search is executed
+	// from each location when a search is executed and display or hide
+	// the search results DOM elements
 	this.searchResultsArray = ko.observableArray();
 	this.searchResults = ko.computed(function() {
 		if (self.searchResultsArray().length > 0) {
@@ -93,9 +94,12 @@ function ViewModel() {
 			self.browse(false);
 		}
 	};
+	// these observables control the Browse from Location buttons
 	this.userLoc = ko.observable('');
 	this.address = ko.observable('');
 	this.zoomSearchAlert = ko.observable('');
+	// Reset Map button takes the map back to where it started at 
+	// Quakertown Action Park
 	this.zoomToStart = function() {
 		map.setCenter({lat: 40.430491, lng: -75.344964});
     map.setZoom(15);
@@ -118,12 +122,18 @@ function ViewModel() {
 	this.centerLocationAddress = ko.observable('');
 	this.mode = ko.observable("DRIVING");
 	this.time = ko.observable("10");
-	this.distanceSearchAlert = ko.observable('');
-	this.typing = ko.observable(false);
-	this.findingUser = ko.observable(false);
 	this.locationMethod = ko.observable("chooseCenter");
+	this.distanceSearchAlert = ko.observable('');
+	// Displays the input field when a user wants to type an address
+	this.typing = ko.observable(false);
+	// Displays loading message
+	this.findingUser = ko.observable(false);
+
+	// When the location method changes, these functions are triggered
 	this.locationMethodChange = function() {
+		// clear residual error messages from previous attempts
 		self.distanceSearchAlert('');
+		// 
 		if (self.locationMethod() === "userLocation") {
 			discoverUserLocation();
 			this.centerLocationAddress('');
@@ -145,10 +155,14 @@ function ViewModel() {
 			self.typing(false);
 		};
 	};
+	// Function executed when the user selects search within distance of location
 	this.runDistanceSearch = function() {
+		// If address was chosen, geocoder must be run first, to establish centerLocation
 		if (self.locationMethod() === "typeAddress") {
 			distanceGeocoder();
 		};
+		// If no location was selected to start, display message, otherwise, run the Search
+		// using the centerLocation
 		if (!self.centerLocation()) {
 			self.distanceSearchAlert('Gotta pick a starting location, bro.');
 		} else {
@@ -158,15 +172,25 @@ function ViewModel() {
 	}
 
 	// Interacting with the search results
+
+	// Displays Streetview and requests the forecast from Wunderground
+	// for that particular location
 	this.showMediaFunction = function() {
+		// "this" is the marker/location, which has methods showMedia and pano
 		if (this.showMedia()) {
 			this.showMedia(false);
 		} else {
 			this.showMedia(true);
-			this.pano.setVisible(true);
+			// If a pano exists for this location, then it must be (re)set to visible,
+			// as it is turned to a black picture when the element's style.display is 'none'
+			if (this.pano) {
+				this.pano.setVisible(true);
+			}
+			// passing the marker object to the populate forecast function
 			self.populateForecast(this);
 		};
 	}
+	// When the Show on Map button is clicked
 	this.goToMarker = function(marker) {
 		map.setCenter(marker.position);
 		map.setZoom(17);
@@ -178,10 +202,13 @@ function ViewModel() {
 	this.clearSearchResults = function() {
 		self.searchResultsArray([]);
 	}
+	// Calling the Weather Underground XHR request function
 	this.populateForecast = function(marker) {
 		getWeatherData(marker);
 	}
+	// observables that control loading and error messages for weather requests
 	this.weatherLoading = ko.observable(false);
+	this.weatherRequestError = ko.observable('');
 
 	// show the credits!
 	this.credits = ko.observable(false);
@@ -194,6 +221,7 @@ function ViewModel() {
 	};
 }
 
+// You can tell I was in a weird mood when I refactored this part...
 var duhVyooMahdul = new ViewModel();
 
 ko.applyBindings(duhVyooMahdul);

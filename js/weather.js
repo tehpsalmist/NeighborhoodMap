@@ -1,57 +1,38 @@
 function getWeatherData(marker) {
+  // set loading message while data is being requested and loaded
   duhVyooMahdul.weatherLoading(true);
+  // declaring the marker to ensure everything runs right, lol...I have no idea why.
   var marker = marker;
+  // establishing the proper url for the 10-day forecast data request
   var url = "http://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/geolookup/conditions/q/" + marker.position.lat() + "," + marker.position.lng() + ".json";
+  // Requesting the data via XHR
   weatherRequest = new XMLHttpRequest();
   weatherRequest.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+      // Parse the response
       allData = JSON.parse(this.responseText);
-      marker.weatherData(allData.forecast.simpleforecast.forecastday);
-      duhVyooMahdul.weatherLoading(false);
+      try {
+        // If the response is what we are looking for, this 10-day forecast array will be found in the object, which we will add to our marker
+        marker.weatherData(allData.forecast.simpleforecast.forecastday);
+      } catch (e) {
+        // All that matters here is that we didn't get the 10-day forecast in the response object. Go big or throw a generic error, right?
+        duhVyooMahdul.weatherRequestError("Weather Underground does not provide information for this location.");
+      } finally {
+        // Clear the loading message and/or error messages
+        duhVyooMahdul.weatherLoading(false);
+        setTimeout(function() {
+          duhVyooMahdul.weatherRequestError('');
+        }, 4000);
+      };
     };
   };
   weatherRequest.open("GET", url, true);
   weatherRequest.send();
-}
-
-
-/*for (var i = markers.length - 1; i >= 0; i--) {
-  markers[i].addURLProperty = function(data) {
-    console.log(data);
-    if (data.response.error) {
-      window.alert("Failure to gather location data for weather readings:" + "\n" + data.response.error.description);
-      this.weatherURL = null;
-    } else if (data.location.country === "US") {
-      this.weatherURL = "http://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/q/" + data.location.state + "/" + data.location.city + ".json";
-      this.weatherURL = this.weatherURL.split(' ').join('_');
-    } else if (data.location.country !== undefined || null) {
-      this.weatherURL = "http://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/q/" + data.location.country + "/" + data.location.city + ".json";
-      this.weatherURL = this.weatherURL.split(' ').join('_');
-    } else {
-      window.alert("There is something very wrong about the data connected to " + this.title +". \n Expect errors during this session, and possibly bad weather.");
-      this.weatherURL = null;
-    };
-  };
-};
-
-function getWeatherURL() {
-  for (var i = markers.length - 1; i >= 0; i--) {
-    var url = "http://api.wunderground.com/api/0a5ebedb6494b2b5/geolookup/q/" + markers[i].position.lat() + "," + markers[i].position.lng() + ".json";
-    var marker = markers[i];
-    marker.weatherURLRequest = new XMLHttpRequest();
-    
-
-    marker.weatherURLRequest.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var weatherGeoData = JSON.parse(this.responseText);
-        marker.addURLProperty(weatherGeoData);
-      }
-    };
-    marker.weatherURLRequest.open("GET", url, true);
-    marker.weatherURLRequest.send();
+  // #errorHandling
+  weatherRequest.onerror = function() {
+    duhVyooMahdul.weatherRequestError('Unable to retrieve data from Weather Underground.')
+    setTimeout(function() {
+      duhVyooMahdul.weatherRequestError('');
+    }, 4000);
   }
 }
-
-window.addEventListener('load', function() {
-  getWeatherURL();
-})*/

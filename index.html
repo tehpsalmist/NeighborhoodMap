@@ -125,13 +125,17 @@
 			</div>
 
 			<div class="loading" data-bind="visible: weatherLoading">
-				<h3>Loading Weather Data</h3>
+				<h3>Sacrificing bulls to the Storm Gods to gain weather data</h3>
 				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
 			</div>
 
 			<div class="loading" data-bind="visible: findingUser">
 				<h3>Sending out leprechauns in search of your device...</h3>
 				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+			</div>
+
+			<div class="loading" data-bind="visible: weatherRequestError">
+				<h3 data-bind="text: weatherRequestError"></h3>
 			</div>
 
 			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp}"></div>
@@ -166,6 +170,19 @@
 							Google Maps is obviously the API that I am leaning most heavily on in this project. Their documentation is very thorough, and I borrowed straight from there examples in several cases, with only minor tweaks. Whatever else people may think of Google, they have certainly enabled much of the web to do what it does. I, for one, am grateful.
 						</p>
 						<a href="https://developers.google.com/maps/documentation/javascript/">Use the Source, Luke!</a>
+					</div>
+				</div>
+				<hr class="credit-hr">
+				<div class="feature">
+					<div class="feature-div">
+						<img class="feature-img img-rounded" src="images/udacity.png">
+					</div>
+					<div class="feature-div">
+						<p class="feature-text">
+							I am submitting this project as part of the requirements for Udacity's Front-End Web Developer NanoDegree. I have absolutely loved the program, and this project in particular has been a very educational experience. For much of the google maps functionality, I borrowed directly from one of the quiz projects they supplied.
+						</p>
+						<a href="https://github.com/udacity/ud864">View the Code on Github</a>
+						<a href="https://www.udacity.com/course/google-maps-apis--ud864">Take the Course Yourself!</a>
 					</div>
 				</div>
 				<hr class="credit-hr">
@@ -268,37 +285,7 @@
 
 			<div id="map"></div>
 
-		</div>
-
-		<!--
-
-		CREDITS		
-
-		Instagram API
-
-		https://gist.github.com/chadedrupt/5974524
-
-		-->
-
-		<!--
-		
-		To do:
-
-		-get directions to spot
-
-		-info windows populated with what? instagram post, type?
-		-connect firebase to location information
-
-		-create location from marker
-
-		-Pull in Instagram Info (Karol's links in slack)
-
-		-create login for users to access/edit firebase
-		-obtain user's instagram login and location services permission
-
-		-style stuff
-
-		-->
+		</div> <!-- end container -->
 
 		<script defer src="js/map.js"></script>
 		
