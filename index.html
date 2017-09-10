@@ -91,8 +91,25 @@
 							<div class="media-container" data-bind="visible: showMedia">
 								<div class="media street-view" data-bind="attr: {id: $index}"></div>
 								<!-- ko foreach: weatherData -->
-								<div class="media">
-									<img data-bind="attr: {src: icon_url}">
+								<div class="media weather-panel">
+									<div class="weather-content weather-dates">
+										<h2 class="uppercase weather-text" data-bind="text: date.weekday"></h2>
+										<h4 class="weather-text"><span data-bind="text: date.monthname"></span> <span data-bind="text: date.day"></span></h4>
+									</div>
+									<div class="weather-content weather-main">
+										<div class="weather-conditions">
+											<img data-bind="attr: {src: icon_url}">
+											<h3 class="weather-text" data-bind="text: conditions"></h3>
+										</div>
+										<div class="weather-temps">
+											<h3 class="weather-text">High: <span data-bind="text: high.fahrenheit"></span>&deg;</h3>
+											<h3 class="weather-text">Low: <span data-bind="text: low.fahrenheit"></span>&deg;</h3>
+										</div>
+									</div>
+									<div class="weather-content weather-rain-wind">
+										<h3 class="weather-text">Chance of Rain: <span data-bind="text: pop"></span>%</h3>
+										<h3 class="weather-text">Windspeeds: <span data-bind="text: avewind.mph"></span>mph</h3>
+									</div>
 								</div>
 								<!-- /ko -->
 							</div>
@@ -105,6 +122,16 @@
 				</div>
 				<button id="sidebar-button" class="fa fa-chevron-right fa-3x" data-bind="click: toggleSidebar, css: {'fa-chevron-left': visibleSidebar, 'fa-chevron-right': chevronRight}"></button>
 				<button id="close-button" class="fa fa-times fa-2x" data-bind="click: toggleSidebar"></button>
+			</div>
+
+			<div class="loading" data-bind="visible: weatherLoading">
+				<h3>Loading Weather Data</h3>
+				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+			</div>
+
+			<div class="loading" data-bind="visible: findingUser">
+				<h3>Sending out leprechauns in search of your device...</h3>
+				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
 			</div>
 
 			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp}"></div>

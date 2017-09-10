@@ -10,14 +10,14 @@ var radius = ko.observable(null);
 
 var drawingManager = '';
 
-var locations = [
+var locations = ko.observableArray([
 	{title: 'Quakertown Action Park', type: 'park', location: {lat: 40.430491, lng: -75.344964}},
   {title: 'Bethlehem Skate Plaza', type: 'park', location: {lat: 40.612325, lng: -75.355298}},
   {title: 'Ambler Skate Park', type: 'park', location: {lat: 40.148134, lng: -75.219983}},
   {title: 'Penn Skate', type: 'park', location: {lat: 40.606535, lng: -75.445162}},
   {title: 'Perkasie Skate Park', type: 'park', location: {lat: 40.364859, lng: -75.298026}},
   {title: 'Bottom Dollar Manual Pad', type: 'spot', location: {lat: 40.442640, lng: -75.338742}}
-];
+]);
 
 function initMap() {
 	var spotIcon = {   
@@ -105,10 +105,10 @@ function initMap() {
   }
 
 
-	for (var i = 0; i < locations.length; i++) {
-    var position = locations[i].location;
-    var title = locations[i].title;
-    var type = locations[i].type;
+	for (var i = 0; i < locations().length; i++) {
+    var position = locations()[i].location;
+    var title = locations()[i].title;
+    var type = locations()[i].type;
     // Create a marker per location, and put into markers array.
     var marker = new google.maps.Marker({
       position: position,
@@ -131,7 +131,7 @@ function initMap() {
     });
 
     // if statement controls which icon will be used for each spot
-    if (locations[i].type === 'spot') {
+    if (locations()[i].type === 'spot') {
       marker.setIcon(spotIcon);
       
       marker.addListener('mouseover', function() {
@@ -140,7 +140,7 @@ function initMap() {
       marker.addListener('mouseout', function() {
         this.setIcon(spotIcon);
       });
-    } else if (locations[i].type === 'park') {
+    } else if (locations()[i].type === 'park') {
       marker.setIcon(parkIcon);
       
       marker.addListener('mouseover', function() {
@@ -327,6 +327,7 @@ function zoomToArea() {
 }
 
 function discoverUserLocation() {
+  duhVyooMahdul.findingUser(true);
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       duhVyooMahdul.centerLocation({
@@ -336,12 +337,15 @@ function discoverUserLocation() {
       duhVyooMahdul.userLoc('There you are! Happy skating!');
       duhVyooMahdul.zoomSearchAlert('');
       map.setCenter(duhVyooMahdul.centerLocation());
+      duhVyooMahdul.findingUser(false);
     }, function() {
       handleLocationError(true);
+      duhVyooMahdul.findingUser(false);
     });
   } else {
     // Browser doesn't support Geolocation
     handleLocationError(false);
+    duhVyooMahdul.findingUser(false);
   }
 }
 

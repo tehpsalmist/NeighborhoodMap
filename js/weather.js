@@ -1,4 +1,5 @@
 function getWeatherData(marker) {
+  duhVyooMahdul.weatherLoading(true);
   var marker = marker;
   var url = "http://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/geolookup/conditions/q/" + marker.position.lat() + "," + marker.position.lng() + ".json";
   weatherRequest = new XMLHttpRequest();
@@ -6,8 +7,7 @@ function getWeatherData(marker) {
     if (this.readyState == 4 && this.status == 200) {
       allData = JSON.parse(this.responseText);
       marker.weatherData(allData.forecast.simpleforecast.forecastday);
-      console.log(markers);
-      console.log(marker.weatherData());
+      duhVyooMahdul.weatherLoading(false);
     };
   };
   weatherRequest.open("GET", url, true);

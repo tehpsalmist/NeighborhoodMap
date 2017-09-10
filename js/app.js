@@ -120,6 +120,7 @@ function ViewModel() {
 	this.time = ko.observable("10");
 	this.distanceSearchAlert = ko.observable('');
 	this.typing = ko.observable(false);
+	this.findingUser = ko.observable(false);
 	this.locationMethod = ko.observable("chooseCenter");
 	this.locationMethodChange = function() {
 		self.distanceSearchAlert('');
@@ -180,6 +181,7 @@ function ViewModel() {
 	this.populateForecast = function(marker) {
 		getWeatherData(marker);
 	}
+	this.weatherLoading = ko.observable(false);
 
 	// show the credits!
 	this.credits = ko.observable(false);
