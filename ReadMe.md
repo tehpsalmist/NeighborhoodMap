@@ -10,6 +10,8 @@ This Google Maps-based web application stores a few locations that my friends an
 Simply open this link in a browser, and off you go!
 [Find a Place to Skate!](https://tehpsalmist.github.io/NeighborhoodMap/)
 
+If you're trying to run the app locally, clone or download this repository and open index.html in your browser of choice.
+
 ## How to Use the App
 
 Open the sidebar to view your search options and results
