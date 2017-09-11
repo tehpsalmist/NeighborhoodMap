@@ -4,7 +4,7 @@ function getWeatherData(marker) {
   // declaring the marker to ensure everything runs right, lol...I have no idea why.
   var marker = marker;
   // establishing the proper url for the 10-day forecast data request
-  var url = "http://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/geolookup/conditions/q/" + marker.position.lat() + "," + marker.position.lng() + ".json";
+  var url = "https://api.wunderground.com/api/0a5ebedb6494b2b5/forecast10day/geolookup/conditions/q/" + marker.position.lat() + "," + marker.position.lng() + ".json";
   // Requesting the data via XHR
   weatherRequest = new XMLHttpRequest();
   weatherRequest.onreadystatechange = function() {
