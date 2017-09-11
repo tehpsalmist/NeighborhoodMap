@@ -30,6 +30,7 @@ function getWeatherData(marker) {
   weatherRequest.send();
   // #errorHandling
   weatherRequest.onerror = function() {
+    duhVyooMahdul.weatherLoading(false);
     duhVyooMahdul.weatherRequestError('Unable to retrieve data from Weather Underground.')
     setTimeout(function() {
       duhVyooMahdul.weatherRequestError('');
