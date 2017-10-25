@@ -46,6 +46,7 @@ a {
 	display: flex;
 	flex-direction: column;
 	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 .title {
@@ -55,7 +56,7 @@ a {
 }
 
 .capitalize {
-	text-transform: capitalize;
+	text-transform: uppercase;
 }
 
 .uppercase {
@@ -64,6 +65,10 @@ a {
 
 .no-margin-bottom {
 	margin-bottom: 0;
+}
+
+.small-margin-top {
+	margin-top: 4px;
 }
 
 .button {
@@ -122,12 +127,24 @@ a {
 
 .search-results {
 	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	text-align: center;
 }
 
 .search-item {
 	width: 100%;
 	text-align: center;
+	padding-top: 4px;
+	padding-bottom: 8px;
+}
+
+.search-item:hover {
+	background-color: rgba(150, 150, 150, 0.8);
+	cursor: pointer;
+}
+
+.search-item-selected {
+	background-color: rgba(150, 150, 150, 0.65);
 }
 
 .distance {
@@ -139,6 +156,7 @@ a {
 	height: 200px;
 	overflow-y: hidden;
 	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
 	white-space: nowrap;
 }
 

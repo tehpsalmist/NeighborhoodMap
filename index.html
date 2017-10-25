@@ -6,11 +6,14 @@
 		<title>Goodlums Skate Spots</title>
 		<link rel="stylesheet" href="styles/styles.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	  <script defer src='js/knockout-3.4.2.js'></script>
-		<!-- <script defer src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script> -->
 	</head>
 	<body>
 		<div class="container">
+			<!-- inlined styles on loading screen for performance -->
+			<div id="loading-screen" style="height: 100vh; width: 100vw; color: #ff4b00; text-shadow: 2px 2px 2px #000000; text-align: center; z-index: 100;" data-bind="visible: loading">
+				<h1 data-bind="text: loading">Loading...</h1>
+				<i data-bind="visible: loadingSpinner" class="fa fa-spinner fa-spin fa-4x" aria-hidden="true"></i>
+			</div>
 			<div id="sidebar" class="sidebar" data-bind="css: {open: visibleSidebar, closed: chevronRight}">
 				<div id="sidebar-content">
 					<h1 class="title">
@@ -79,17 +82,14 @@
 						</form>
 					</section>
 
-					<h2 class="title" data-bind="visible: searchResults">
-						Search Results:
-					</h2>
+					<h2 class="title" data-bind="text: searchResults"></h2>
 					<div id="search-results" class="search-results" data-bind="foreach: searchResultsArray">
-						<div class="search-item">
-							<h3 class="no-margin-bottom">(<span class="capitalize" data-bind="text: type"></span>)--<span data-bind="text: title"></span></h3>
+						<div class="search-item" data-bind="css: {'search-item-selected': showMedia}, click: $parent.showMediaFunction">
+							<h3 class="no-margin-bottom small-margin-top" data-bind="text: title"></h3>
 							<h4 class="distance no-margin-bottom" data-bind="visible: distanceObj"><span data-bind="text: distanceObj !== false ? distanceObj.distance.text : 'No starting location established'"></span></h4>
-							<button class="button go-button" data-bind="text: showMedia() === true ? 'Hide Media' : 'Show Media', click: $parent.showMediaFunction"></button>
-							<button class="button go-button" data-bind="click: $parent.goToMarker">Show on Map</button>
+							<h4 class="capitalize small-margin-top" data-bind="text: type, visible: showMedia"></h4>
 							<div class="media-container" data-bind="visible: showMedia">
-								<div class="media street-view" data-bind="attr: {id: $index}"></div>
+								<div class="media street-view" data-bind="attr: {id: divID}"></div>
 								<!-- ko foreach: weatherData -->
 								<div class="media weather-panel">
 									<div class="weather-content weather-dates">
@@ -115,7 +115,7 @@
 							</div>
 						</div>
 					</div>
-					<button class="button go-button" data-bind="visible: searchResults, click: clearSearchResults">Clear Search Results</button>
+					<button class="button go-button" data-bind="visible: filtered, click: unfilterSearchResults">Remove Filter</button>
 					<p class="credit-button" data-bind="click: creditClick"> <!-- data-bind="click: openCredits" -->
 						Credits
 					</p>
@@ -258,18 +258,6 @@
 					</div>
 				</div>
 				<hr class="credit-hr">
-				<!--<div class="feature">
-					<div class="feature-div">
-						<img class="feature-img img-rounded" src="images/chrisesplin.png">
-					</div>
-					<div class="feature-div">
-						<p class="feature-text">
-							Chris Esplin has some super helpful things to say about firebase! I watched this video and read this article several times. :)
-						</p>
-						<a href="https://howtofirebase.com/firebase-authentication-for-web-d58aad62cf6d">See for Yourself</a>
-					</div>
-				</div>
-				<hr class="credit-hr">-->
 				<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img img-rounded white-background insignia" src="images/insignia.png">
@@ -287,15 +275,17 @@
 
 		</div> <!-- end container -->
 
-		<script defer src="js/map.js"></script>
+		<script src='js/knockout-3.4.2.js'></script>
+
+		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+
+		<script src="js/map.js"></script>
+
+		<script src="js/app.js"></script>
+
+		<script src="js/weather.js"></script>
 		
-		<script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=initMap"></script>
-
-	  <!-- <script defer src="js/database.js"></script> -->
-
-	  <script defer src="js/app.js"></script>
-
-	  <script defer src="js/weather.js"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=loadDatabase" onerror="googleError(error)"></script>
 
 	</body>
 </html>

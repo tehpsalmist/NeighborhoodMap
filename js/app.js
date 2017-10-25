@@ -1,6 +1,7 @@
 function ViewModel() {
 	var self = this;
-
+	this.loading = ko.observable('Loading...');
+	this.loadingSpinner = ko.observable(true);
 	// Sidebar access variables and functions
 	this.visibleSidebar = ko.observable(false);
 	this.chevronRight = ko.observable(true);
@@ -27,6 +28,7 @@ function ViewModel() {
 		if (newMarker()) {
 			newMarker().setMap(null);
 			newMarker(null);
+			self.centerLocation(null);
 		} else {
 			shape().setMap(null);
 			self.radiusResult(0);
@@ -42,7 +44,6 @@ function ViewModel() {
 	this.showDrawingPointer = function() {
 		self.drawingPointer(true);
 		self.browse(false);
-		self.details(false);
 		self.distance(false);
 		setTimeout(function() {
 			self.fadePointer(true);
@@ -77,13 +78,26 @@ function ViewModel() {
 	// from each location when a search is executed and display or hide
 	// the search results DOM elements
 	this.searchResultsArray = ko.observableArray();
+	this.filtered = ko.observable(false);
 	this.searchResults = ko.computed(function() {
-		if (self.searchResultsArray().length > 0) {
-			return true;
+		if (self.searchResultsArray().length === locations.length) {
+			self.filtered(false);
+			return 'Locations';
+		} else if (self.searchResultsArray().length === 0) {
+			self.filtered(true);
+			return 'No Locations Found';
 		} else {
-			return false;
+			self.filtered(true);
+			return 'Filtered Locations';
 		}
 	}, this);
+	// Restore all markers to the map and list
+	this.unfilterSearchResults = function() {
+		self.searchResultsArray([]);
+		clearMedia();
+		markers.map(marker => self.searchResultsArray.push(marker));
+		showMarkers(markers);
+	};
 
 	// Browse from Location button
 	this.browse = ko.observable(false);
@@ -185,22 +199,13 @@ function ViewModel() {
 			// as it is turned to a black picture when the element's style.display is 'none'
 			if (this.pano) {
 				this.pano.setVisible(true);
+			} else {
+				createStreetView(this, this.divID);
 			}
 			// passing the marker object to the populate forecast function
 			self.populateForecast(this);
+			goToMarker(this);
 		}
-	};
-	// When the Show on Map button is clicked
-	this.goToMarker = function(marker) {
-		map.setCenter(marker.position);
-		map.setZoom(17);
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function() {
-			marker.setAnimation(null);
-		}, 3000);
-	};
-	this.clearSearchResults = function() {
-		self.searchResultsArray([]);
 	};
 	// Calling the Weather Underground XHR request function
 	this.populateForecast = function(marker) {

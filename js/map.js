@@ -11,18 +11,35 @@ var radius = ko.observable(null);
 
 var drawingManager = '';
 
-var locations = ko.observableArray([
-	{title: 'Quakertown Action Park', type: 'park', location: {lat: 40.430491, lng: -75.344964}},
-  {title: 'Bethlehem Skate Plaza', type: 'park', location: {lat: 40.612325, lng: -75.355298}},
-  {title: 'Ambler Skate Park', type: 'park', location: {lat: 40.148134, lng: -75.219983}},
-  {title: 'Penn Skate', type: 'park', location: {lat: 40.606535, lng: -75.445162}},
-  {title: 'Perkasie Skate Park', type: 'park', location: {lat: 40.364859, lng: -75.298026}},
-  {title: 'Bottom Dollar Manual Pad', type: 'spot', location: {lat: 40.442640, lng: -75.338742}},
-  {title: 'Error Testing Location', type: 'spot', location: {lat: 0, lng: 0}} // Use this location to test error handling (Off the West African Shores)
-]);
+var locations = [];
+
+function loadDatabase() {
+  var config = {
+    apiKey: "AIzaSyAvirBHOZJADuil02yaaZseFILM7esEOqc",
+    authDomain: "neighborhood-map-174401.firebaseapp.com",
+    databaseURL: "https://neighborhood-map-174401.firebaseio.com",
+    projectId: "neighborhood-map-174401",
+    storageBucket: "neighborhood-map-174401.appspot.com",
+    messagingSenderId: "793662469029"
+  };
+  firebase.initializeApp(config);
+
+  var locationData = firebase.database().ref('locations');
+
+  locationData.once('value').then(function(snapshot) {
+    snapshot.val().map(location => {
+      locations.push(location);
+    });
+    initMap();
+  }).catch(e => {
+    console.log(e);
+    duhVyooMahdul.loading('Unfortunately, there has been a database error. Reload the page to try again.');
+    duhVyooMahdul.loadingSpinner(false);
+  });
+}
 
 function initMap() {
-	// Different icons for different types of skate spots (2 of each for highlighting)
+  // Different icons for different types of skate spots (2 of each for highlighting)
   var spotIcon = {   
     path: "M70.5,3c-0.3-0.3-0.8-0.5-1.2-0.5c-0.4,0-0.8,0.2-1.2,0.5L9,59.5c-0.7,0.6-0.7,1.7-0.1,2.4c0.3,0.3,0.8,0.5,1.2,0.5  c0.4,0,0.8-0.2,1.2-0.5L70.5,5.4C71.2,4.8,71.2,3.7,70.5,3z M58.5,51.5V19.3l-3,2.8v29.3H58.5z M32.5,76.5V44l-3,2.8v29.6H32.5z   M96.3,40.5H64.9c-0.9,0-1.4,1.1-1.4,2v11H52.9c-0.9,0-1.4,0.7-1.4,1.6v10.4H40.3c-0.9,0-1.8,1.3-1.8,2.2v10.8H27.7  c-0.9,0-2.2,0.9-2.2,1.8v11.2h-9.7c-0.9,0-1.3,0.5-1.3,1.4v9.6l29.3,0c0.8,0,1.4-0.2,2-0.6l50.7-49.2V40.9  C96.5,40.9,96.4,40.5,96.3,40.5z",
     fillColor: '#ff4b00',
@@ -82,6 +99,10 @@ function initMap() {
     center: {lat: 40.430491, lng: -75.344964},
     zoom: 15,
     mapTypeControl: true,
+    mapTypeControlOptions: {
+      mapTypeIds: ['satellite', 'terrain', 'roadmap'],
+      position: google.maps.ControlPosition.TOP_RIGHT
+    },
     mapTypeId: 'satellite',
     zoomControl: true,
     scaleControl: true,
@@ -112,10 +133,10 @@ function initMap() {
   }
 
   // creating the marker objects from each location in the locations array
-	for (var i = 0; i < locations().length; i++) {
-    var position = locations()[i].location;
-    var title = locations()[i].title;
-    var type = locations()[i].type;
+	for (var i = 0; i < locations.length; i++) {
+    var position = locations[i].location;
+    var title = locations[i].title;
+    var type = locations[i].type;
     // Create a marker per location, and put into markers array.
     var marker = new google.maps.Marker({
       position: position,
@@ -125,21 +146,18 @@ function initMap() {
       map: map,
       type: type
     });
-    // Push the marker to our array of markers.
-    markers.push(marker);
     // Create onclick events to open the infowindow at each marker, populate the search results, and animate the marker.
     marker.addListener('click', function() {
       populateInfoWindow(this, spotInfowindow);
-    });
-    marker.addListener('click', function() {
       markerBounce(this);
-    });
-    marker.addListener('click', function() {
-      foundTheMarker(this, false);
+      duhVyooMahdul.showMediaFunction.call(this);
+      if (duhVyooMahdul.visibleSidebar() === false) {
+        duhVyooMahdul.toggleSidebar();
+      }
     });
 
     // if statement controls which icon will be used for each spot with listeners to alternate colors on mouseover
-    if (locations()[i].type === 'spot') {
+    if (locations[i].type === 'spot') {
       marker.setIcon(spotIcon);
       
       marker.addListener('mouseover', function() {
@@ -148,7 +166,7 @@ function initMap() {
       marker.addListener('mouseout', function() {
         this.setIcon(spotIcon);
       });
-    } else if (locations()[i].type === 'park') {
+    } else if (locations[i].type === 'park') {
       marker.setIcon(parkIcon);
       
       marker.addListener('mouseover', function() {
@@ -158,7 +176,22 @@ function initMap() {
         this.setIcon(parkIcon);
       });
     }
+    // distance object (if not false) contains the information to display
+    marker.distanceObj = false;
+    // weatherData is declared here in the event no data can be found, and as a placeholder while data loads.
+    marker.weatherData = ko.observable({});
+    // boolean observable to handle visibility of media/weather info under location display
+    marker.showMedia = ko.observable(false);
+    // Yelp Food Data placeholder
+    marker.yeldFood = ko.observable({});
+    // Yelp Skatepark Data placeholder
+    marker.yelpShop = ko.observable({});
+    // set ID of div corresponding to this marker's place in the search results array. This will be used to populate the Street View Panorama.
+    marker.divID = title.split(' ').join('_');
+    markers.push(marker);
   }
+  // add markers to search results, from which they will be displayed
+  markers.map(marker => duhVyooMahdul.searchResultsArray.push(marker));
 
   // drawing manager event listener
   drawingManager.addListener('overlaycomplete', function(event) {
@@ -223,32 +256,18 @@ function initMap() {
       });
     }
   });
-}
-
-// This function handles the extension of the marker when it is found within a search
-function foundTheMarker(marker, distances) {
-  marker.setMap(map);
-  // distance object (if not false) contains the information to display
-  marker.distanceObj = distances;
-  // weatherData is declared here in the event no data can be found, and as a placeholder while data loads.
-  marker.weatherData = ko.observable({});
-  // boolean observable to handle visibility of media/weather info under location display
-  marker.showMedia = ko.observable(false);
-  // add marker to search results, from which it will be displayed
-  duhVyooMahdul.searchResultsArray.push(marker);
-  // set ID of div corresponding to this marker's place in the search results array. This will be used to populate the Street View Panorama.
-  var divID = duhVyooMahdul.searchResultsArray().length - 1;
-  // this function basically handles StreetView
-  populateSearchResults(marker, divID);
+  duhVyooMahdul.loading(false);
 }
 
 function searchWithinPolygon() {
   // clear results, to avoid duplicates etc.
   duhVyooMahdul.searchResultsArray.removeAll();
+  clearMedia();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(markers[i].position, shape())) {
       // extend the marker with the necessary information (pass false for distances, since no relative distance was measured)
-      foundTheMarker(markers[i], false);
+      duhVyooMahdul.searchResultsArray.push(markers[i]);
+      markers[i].setMap(map);
     } else {
       // hide markers outside of the search parameters
       markers[i].setMap(null);
@@ -259,10 +278,12 @@ function searchWithinPolygon() {
 function searchWithinCircle() {
   // clear results, to avoid duplicates etc.
   duhVyooMahdul.searchResultsArray.removeAll();
+  clearMedia();
   for (var i = 0; i < markers.length; i++) {
     if (google.maps.geometry.spherical.computeDistanceBetween(markers[i].getPosition(), shape().getCenter()) <= shape().getRadius()) {
       // extend the marker with the necessary information (pass false for distances, since no relative distance was measured)
-      foundTheMarker(markers[i], false);
+      duhVyooMahdul.searchResultsArray.push(markers[i]);
+      markers[i].setMap(map);
     } else {
       // hide markers outside of the search parameters
       markers[i].setMap(null);
@@ -271,15 +292,15 @@ function searchWithinCircle() {
 }
 
 function hideMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
+  markers.map(marker => marker.setMap(null));
 }
 
 function showMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-  }
+  markers.map(marker => marker.setMap(map));
+}
+
+function clearMedia() {
+  markers.map(marker => marker.showMedia(false));
 }
 
 function markerBounce(marker) {
@@ -310,7 +331,7 @@ function populateInfoWindow(marker, infowindow) {
         var nearStreetViewLocation = data.location.latLng;
         var heading = google.maps.geometry.spherical.computeHeading(
           nearStreetViewLocation, marker.position);
-          infowindow.setContent('<h2 class="street-view-title">' + marker.title + '</h2><div id="pano"></div><p class="weather-hint">Click \"Show Media\" in the Sidebar to see the 10-day Forecast!</p>');
+          infowindow.setContent('<h2 class="street-view-title">' + marker.title + '</h2><div id="pano"></div>');
           var panoramaOptions = {
             position: nearStreetViewLocation,
             pov: {
@@ -321,7 +342,7 @@ function populateInfoWindow(marker, infowindow) {
         var panorama = new google.maps.StreetViewPanorama(
           document.getElementById('pano'), panoramaOptions);
       } else {
-        infowindow.setContent('<h2 class="street-view-title">' + marker.title + '</h2><p class="weather-hint">Click \"Show Media\" in the Sidebar to see the 10-day Forecast!</p><h4 class="street-view-title">No Street View Found</h4>');
+        infowindow.setContent('<h2 class="street-view-title">' + marker.title + '</h2><h4 class="street-view-title">No Street View Found</h4>');
       }
     }
     // Use streetview service to get the closest streetview image within
@@ -419,9 +440,11 @@ function distanceGeocoder() {
 
 // Find locations within a travel time of the chosen center location
 function searchWithinTime() {
+  clearMedia();
   // Initialize the distance matrix service.
   var distanceMatrixService = new google.maps.DistanceMatrixService;
   hideMarkers(markers);
+  markers.map(marker => marker.distanceObj = false);
   // Use the distance matrix service to calculate the duration of the
   // routes between all our markers, and the destination address entered
   // by the user. Then put all the origins into an origin matrix.
@@ -464,11 +487,13 @@ function displayMarkersWithinTime(response) {
         // Duration value is given in seconds so we make it MINUTES. We need both the value
         // and the text.
         var duration = element.duration.value / 60;
-        if (duration <= duhVyooMahdul.time()) {
+        if (duration <= duhVyooMahdul.time() && duration !== 0) {
           // Markers/elements that survived to this point are sent off to be happily married
           // by the foundTheMarker function so the data can populate the DOM.
           atLeastOne = true;
-          foundTheMarker(markers[i], element);
+          markers[i].distanceObj = element;
+          duhVyooMahdul.searchResultsArray.push(markers[i]);
+          showMarkers(duhVyooMahdul.searchResultsArray());
         }
       }
     }
@@ -480,7 +505,7 @@ function displayMarkersWithinTime(response) {
 }
 
 // This function puts the Street View pano in the sidebar for each location found in any search
-function populateSearchResults(marker, div) {
+function createStreetView(marker, div) {
   var streetViewService = new google.maps.StreetViewService();
   var streetRadius = 50;
   // In case the status is OK, which means the pano was found, compute the
@@ -506,4 +531,17 @@ function populateSearchResults(marker, div) {
     }
   }
   streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetView);
+}
+
+function goToMarker(marker) {
+  map.setCenter(marker.position);
+  map.setZoom(15);
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function() {
+    marker.setAnimation(null);
+  }, 3000);
+}
+
+function googleError(error) {
+  duhVyooMahdul.loading(error);
 }
