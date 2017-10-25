@@ -30,7 +30,7 @@ function getYelpStuff(marker) {
 
   var url = "https://api.yelp.com/v3/businesses/search?term=food&latitude=" + marker.position.lat + "&longitude=" + marker.position.lng + "Authorization=Bearer " + token;
 
-  fetch(url, {mode: "no-cors", "Content-Type": "application/x-www-form-urlencoded"})
+  fetch(url)
     .then(response => {
       response.json();
       console.log(response, response.json());
