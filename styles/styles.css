@@ -11,6 +11,10 @@ a {
 	color: #ff4b00;
 }
 
+.a {
+	color: #00ffff;
+}
+
 #map {
 	height: 100%;
 	z-index: 0;
@@ -28,6 +32,15 @@ a {
 	transition: transform 0.4s ease;
 	display: flex;
 	justify-content: center;
+}
+
+.inline {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.wrap {
+	white-space: normal;
 }
 
 .closed {
@@ -181,12 +194,13 @@ a {
 	display: inline-block;
 	vertical-align: top;
 }
-.weather-text {
+.panel-text {
 	margin: 0;
 	padding: 0;
+	width: 100%;
 }
 
-.weather-content {
+.panel-content {
 	width: 100%;
 }
 
@@ -217,6 +231,90 @@ a {
 .weather-rain-wind {
 	height: 30%;
 	padding-top: 8px;
+}
+
+.foursquare-panel {
+	width: auto;
+	min-width: 80%;
+	margin: 0 5px;
+	background-color: rgba(191, 0, 0, 0.68);
+	border-radius: 10px;
+	color: #eeeeee;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.foursquare-name {
+	height: 20%;
+}
+
+.foursquare-main {
+	height: 80%;
+}
+
+.foursquare-img-div {
+	width: 50%;
+	height: 100%;
+	margin: 0;
+	vertical-align: middle;
+	display: inline-block;
+	float: left;
+}
+
+.foursquare-img-div:before {
+	height: 100%;
+	vertical-align: middle;
+}
+
+.foursquare-img {
+	vertical-align: middle;
+	width: 100%;
+}
+
+.foursquare-data {
+	display: inline;
+	vertical-align: middle;
+	width: auto;
+	height: 100%
+	margin: 5px 0;
+	white-space: normal;
+}
+
+.rating-small {
+	font-size: .5em;
+}
+
+.if-no-img {
+	font-size: 1em;
+}
+
+.img-block {
+	height: 50px;
+}
+
+.img-block:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.foursquare-logo {
+	width: 35%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.google-maps-logo {
+	width: 40%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.wunderground-logo {
+	width: 20%;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 #sidebar-button {
@@ -306,6 +404,7 @@ a {
 .back-to-map:hover {
 	text-shadow: 1px 1px .5px #252525;
 	color: white;
+	cursor: pointer;
 }
 
 .back-to-map:focus {
@@ -395,6 +494,10 @@ a {
 	width: 100%;
 	text-align: center;
 	color: #ff4b00;
+}
+
+.foursquare-loading {
+	top: 100px;
 }
 
 .street-view-loading {

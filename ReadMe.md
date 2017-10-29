@@ -25,12 +25,15 @@ Open the sidebar to view your search options and results
 #### Credits:
 See the full credits in the app's sidebar (*click Credits in the bottom-right*)
 
-For the app's functionality, I leaned on and learned from:
+For the app's functionality and design, I leaned on and learned from:
 [Google Maps JS API](https://developers.google.com/maps/documentation/javascript/)
 [Udacity Front-end NanoDegree Program Code](https://github.com/udacity/ud864)
 [Weather Underground API](https://www.wunderground.com/weather/api)
+[Foursquare API v2](https://developer.foursquare.com/docs)
+[Google Firebase](https://firebase.google.com/)
 [KnockoutJS](http://knockoutjs.com/documentation/introduction.html)
 [This Guy](https://gist.github.com/chadedrupt/5974524)
+[Definitely This Guy](https://codepen.io/edge0703/pen/iHJuA)
 [This SVG](https://thenounproject.com/search/?q=half-pipe&i=436254)
 [Also This SVG](https://thenounproject.com/term/stairs/1156135/)
 [The Noun Project](https://thenounproject.com/)

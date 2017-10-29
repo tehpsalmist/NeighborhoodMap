@@ -183,9 +183,7 @@ function initMap() {
     // boolean observable to handle visibility of media/weather info under location display
     marker.showMedia = ko.observable(false);
     // Yelp Food Data placeholder
-    marker.yeldFood = ko.observable({});
-    // Yelp Skatepark Data placeholder
-    marker.yelpShop = ko.observable({});
+    marker.foursquare = ko.observable({});
     // set ID of div corresponding to this marker's place in the search results array. This will be used to populate the Street View Panorama.
     marker.divID = title.split(' ').join('_');
     markers.push(marker);
@@ -339,8 +337,7 @@ function populateInfoWindow(marker, infowindow) {
               pitch: 0
             }
           };
-        var panorama = new google.maps.StreetViewPanorama(
-          document.getElementById('pano'), panoramaOptions);
+        var panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'), panoramaOptions);
       } else {
         infowindow.setContent('<h2 class="street-view-title">' + marker.title + '</h2><h4 class="street-view-title">No Street View Found</h4>');
       }
@@ -350,7 +347,7 @@ function populateInfoWindow(marker, infowindow) {
     streetViewService.getPanoramaByLocation(marker.position, streetRadius, getStreetView);
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
-  };
+  }
 }
 
 function zoomToArea() {
@@ -442,7 +439,7 @@ function distanceGeocoder() {
 function searchWithinTime() {
   clearMedia();
   // Initialize the distance matrix service.
-  var distanceMatrixService = new google.maps.DistanceMatrixService;
+  var distanceMatrixService = new google.maps.DistanceMatrixService();
   hideMarkers(markers);
   markers.map(marker => marker.distanceObj = false);
   // Use the distance matrix service to calculate the duration of the

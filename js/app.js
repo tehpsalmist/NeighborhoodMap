@@ -203,17 +203,26 @@ function ViewModel() {
 				createStreetView(this, this.divID);
 			}
 			// passing the marker object to the populate forecast function
-			self.populateForecast(this);
+			self.populateAPIStuff(this);
 			goToMarker(this);
 		}
+		return true;
 	};
-	// Calling the Weather Underground XHR request function
-	this.populateForecast = function(marker) {
+	// prevent event bubbling so the media containers aren't closed prematurely when touched
+	this.stopProp = function(event) {
+		return true;
+	}
+	// Calling the 
+	this.populateAPIStuff = function(marker) {
 		getWeatherData(marker);
+		getFoursquareData(marker);
 	};
-	// observables that control loading and error messages for weather requests
+	// observables that control loading and error messages for api requests
 	this.weatherLoading = ko.observable(false);
 	this.weatherRequestError = ko.observable('');
+
+	this.foursquareLoading = ko.observable(false);
+	this.foursquareRequestError = ko.observable('');
 
 	// show the credits!
 	this.credits = ko.observable(false);

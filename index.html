@@ -88,35 +88,75 @@
 							<h3 class="no-margin-bottom small-margin-top" data-bind="text: title"></h3>
 							<h4 class="distance no-margin-bottom" data-bind="visible: distanceObj"><span data-bind="text: distanceObj !== false ? distanceObj.distance.text : 'No starting location established'"></span></h4>
 							<h4 class="capitalize small-margin-top" data-bind="text: type, visible: showMedia"></h4>
-							<div class="media-container" data-bind="visible: showMedia">
-								<div class="media street-view" data-bind="attr: {id: divID}"></div>
-								<!-- ko foreach: weatherData -->
-								<div class="media weather-panel">
-									<div class="weather-content weather-dates">
-										<h2 class="uppercase weather-text" data-bind="text: date.weekday"></h2>
-										<h4 class="weather-text"><span data-bind="text: date.monthname"></span> <span data-bind="text: date.day"></span></h4>
-									</div>
-									<div class="weather-content weather-main">
-										<div class="weather-conditions">
-											<img data-bind="attr: {src: icon_url}">
-											<h3 class="weather-text" data-bind="text: conditions"></h3>
+							<div data-bind="visible: showMedia">
+								<h4 class="capitalize no-margin-bottom">
+									Streetview and Weather
+								</h4>
+								<div class="media-container" data-bind="click: $parent.stopProp, clickBubble: false">
+									<div class="media street-view" data-bind="attr: {id: divID}"></div>
+									<!-- ko foreach: weatherData -->
+									<div class="media weather-panel">
+										<div class="panel-content weather-dates">
+											<h2 class="uppercase panel-text" data-bind="text: date.weekday"></h2>
+											<h4 class="panel-text"><span data-bind="text: date.monthname"></span> <span data-bind="text: date.day"></span></h4>
 										</div>
-										<div class="weather-temps">
-											<h3 class="weather-text">High: <span data-bind="text: high.fahrenheit"></span>&deg;</h3>
-											<h3 class="weather-text">Low: <span data-bind="text: low.fahrenheit"></span>&deg;</h3>
+										<div class="panel-content weather-main">
+											<div class="weather-conditions">
+												<img data-bind="attr: {src: icon_url}">
+												<h3 class="panel-text" data-bind="text: conditions"></h3>
+											</div>
+											<div class="weather-temps">
+												<h3 class="panel-text">High: <span data-bind="text: high.fahrenheit"></span>&deg;</h3>
+												<h3 class="panel-text">Low: <span data-bind="text: low.fahrenheit"></span>&deg;</h3>
+											</div>
+										</div>
+										<div class="panel-content weather-rain-wind">
+											<h3 class="panel-text">Chance of Rain: <span data-bind="text: pop"></span>%</h3>
+											<h3 class="panel-text">Windspeeds: <span data-bind="text: avewind.mph"></span>mph</h3>
 										</div>
 									</div>
-									<div class="weather-content weather-rain-wind">
-										<h3 class="weather-text">Chance of Rain: <span data-bind="text: pop"></span>%</h3>
-										<h3 class="weather-text">Windspeeds: <span data-bind="text: avewind.mph"></span>mph</h3>
+									<!-- /ko -->
+								</div>
+								<h4 class="capitalize no-margin-bottom" data-bind="visible: showMedia">
+									Nearby Food
+								</h4>
+								<div class="media-container" data-bind="click: $parent.stopProp, clickBubble: false, foreach: foursquare">
+									<div class="media foursquare-panel">
+										<div class="panel-content foursquare-name">
+											<h3 class="uppercase panel-text" data-bind="text: venue.name"></h3>
+											<h5 class="panel-text"><span data-bind="text: venue.categories[0].name"></span> <span data-bind="text: venue.location.distance"></span>m from <span data-bind="text: $parent.type"></span></h5>
+										</div>
+										<div class="panel-content foursquare-main">
+											<!-- ko if: venue.photos.groups[0] -->
+											<div class="foursquare-img-div">
+												<img class="foursquare-img" data-bind="attr: {src: venue.photos.groups[0].items[0].prefix + 'width200' + venue.photos.groups[0].items[0].suffix}">
+											</div>
+											<!-- /ko -->
+											<div class="foursquare-data">
+												<h6 class="panel-text" data-bind="css: {'if-no-img': !venue.photos.groups[0]}">
+													<span class="wrap" data-bind="text: venue.location.formattedAddress[0]"></span><br><!-- ko if: venue.contact.formattedPhone --><span class="wrap" data-bind="text: venue.contact.formattedPhone"></span><br><!-- /ko --><!-- ko if: venue.price -->Price: <span class="wrap" data-bind="text: venue.price.message"></span><br><!-- /ko --><!-- ko if: venue.hours --><!-- ko if: venue.hours.status --><span class="wrap" data-bind="text: venue.hours.status"></span><br><!-- /ko --><!-- /ko --><span class="wrap" data-bind="if: venue.menu"><a target="_blank" rel="noreferrer" rel="noopener" class="a" data-bind="text: venue.menu.anchor, attr: {href: venue.menu.url}"></a></span>
+												</h6>
+												<h1 class="no-margin-bottom" data-bind="if: venue.rating">
+													<span data-bind="text: venue.rating, style: {color: '#' + venue.ratingColor}"></span><span class="rating-small">/10</span>
+												</h1>
+												<h2 class="no-margin-bottom" data-bind="if: !venue.rating">
+													No Rating
+												</h2>
+											</div>
+										</div>
 									</div>
 								</div>
-								<!-- /ko -->
+								<h4 class="no-margin-bottom small-margin-top">Powered by</h4>
+								<div class="block">
+									<img class="google-maps-logo" src="images/googlemaps.png">
+									<img class="wunderground-logo" src="images/wunderground.png">
+									<img class="foursquare-logo" src="images/foursquare-logo1.png">
+								</div>
 							</div>
 						</div>
 					</div>
 					<button class="button go-button" data-bind="visible: filtered, click: unfilterSearchResults">Remove Filter</button>
-					<p class="credit-button" data-bind="click: creditClick"> <!-- data-bind="click: openCredits" -->
+					<p class="credit-button" data-bind="click: creditClick">
 						Credits
 					</p>
 				</div>
@@ -125,7 +165,12 @@
 			</div>
 
 			<div class="loading" data-bind="visible: weatherLoading">
-				<h3>Sacrificing bulls to the Storm Gods to gain weather data</h3>
+				<h3>Sacrificing bulls to the Storm Gods for local weather data</h3>
+				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
+			</div>
+
+			<div class="loading foursquare-loading" data-bind="visible: foursquareLoading">
+				<h3>Unleashing Gremlins to fetch restaurant reviews</h3>
 				<i class="fa fa-spinner fa-spin fa-2x" aria-hidden="true"></i>
 			</div>
 
@@ -210,7 +255,7 @@
 					</div>
 				</div>
 				<hr class="credit-hr">
-				<!--<div class="feature">
+				<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img img-rounded" src="images/firebase.png">
 					</div>
@@ -221,7 +266,7 @@
 						<a href="https://firebase.google.com/docs">Learn About Firebase</a>
 					</div>
 				</div>
-				<hr class="credit-hr">-->
+				<hr class="credit-hr">
 				<div class="feature">
 					<div class="feature-div">
 						<img class="feature-img" src="images/wunderground.png">
@@ -236,6 +281,18 @@
 				<hr class="credit-hr">
 				<div class="feature">
 					<div class="feature-div">
+						<img class="feature-img" src="images/foursquare-logo1.png">
+					</div>
+					<div class="feature-div">
+						<p class="feature-text">
+							Foursquare's API (v2) is both easy to work with and inspiring. I could almost feel the endpoints pulling my fingers back to the keyboard to explore more of the querying potential. It almost made me want to implement user auth...almost. ;)
+						</p>
+						<a href="https://developer.foursquare.com/docs">Catch the Foursquare Spirit</a>
+					</div>
+				</div>
+				<hr class="credit-hr">
+				<div class="feature">
+					<div class="feature-div">
 						<img class="feature-img" src="images/Chad-Edrupt.jpg">
 					</div>
 					<div class="feature-div">
@@ -243,6 +300,18 @@
 							I only ended up grabbing 2 or 3 lines from this guy's code, but without him, I would likely still be wandering through the ether trying to find my way.
 						</p>
 						<a href="https://gist.github.com/chadedrupt/5974524">The Gist</a>
+					</div>
+				</div>
+				<hr class="credit-hr">
+				<div class="feature">
+					<div class="feature-div">
+						<img class="feature-img img-rounded" src="images/ChristianCodepen.png">
+					</div>
+					<div class="feature-div">
+						<p class="feature-text">
+							If you've ever tried to vertical align an element before, you will appreciate just how brilliant this guy is and how much credit he deserves for this excellent project he put up on CodePen.
+						</p>
+						<a href="https://codepen.io/edge0703/pen/iHJuA">The Pen</a>
 					</div>
 				</div>
 				<hr class="credit-hr">
@@ -285,7 +354,7 @@
 
 		<script src="js/weather.js"></script>
 		
-		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=loadDatabase" onerror="googleError(error)"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYWyif_MVO8hvgMyTPNBrNPl65zQ1oCkQ&libraries=places,geometry,drawing&v=3&callback=loadDatabase" onerror="googleError()"></script>
 
 	</body>
 </html>
