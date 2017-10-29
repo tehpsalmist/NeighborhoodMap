@@ -211,7 +211,7 @@ function ViewModel() {
 	// prevent event bubbling so the media containers aren't closed prematurely when touched
 	this.stopProp = function(event) {
 		return true;
-	}
+	};
 	// Calling the 
 	this.populateAPIStuff = function(marker) {
 		getWeatherData(marker);
