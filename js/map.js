@@ -540,5 +540,6 @@ function goToMarker(marker) {
 }
 
 function googleError(error) {
-  duhVyooMahdul.loading(error);
+  console.log(error);
+  duhVyooMahdul.loading('Google Maps was unable to load. Refresh your browser to try again.');
 }

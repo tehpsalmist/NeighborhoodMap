@@ -183,6 +183,10 @@
 				<h3 data-bind="text: weatherRequestError"></h3>
 			</div>
 
+			<div class="loading" data-bind="visible: foursquareRequestError">
+				<h3 data-bind="text: foursquareRequestError"></h3>
+			</div>
+
 			<div class="fa fa-3x drawing-pointer" data-bind="visible: drawingPointer, css: {'fade-out': fadePointer, 'fa-chevron-down': chevronDown, 'fa-chevron-up': chevronUp}"></div>
 
 			<div class="credits" data-bind="visible: credits">
